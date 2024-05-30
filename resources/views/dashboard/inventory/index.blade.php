@@ -38,7 +38,7 @@
                                 <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                     <strong>{{ $inventory->created_at }}</strong>
                                 </td>
-                                <td>{{ $inventory->product->name }}</td>
+                                <td>{{ $inventory->product->product_name }}</td>
                                 <td>{{ $inventory->quantity }}</td>
                                 <td>{{ $inventory->unit }}</td>
                                 <td>{{ $inventory->price }}</td>
