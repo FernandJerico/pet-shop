@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +16,8 @@ class ProductController extends Controller
     public function index()
     {
         //index
-        return view('dashboard.product.index');
+        $products = Product::with('category', 'subcategory')->get();
+        return view('dashboard.product.index', compact('products'));
     }
 
     /**
@@ -23,7 +26,8 @@ class ProductController extends Controller
     public function create()
     {
         //create
-        return view('dashboard.product.create');
+        $categories = Category::all();
+        return view('dashboard.product.create', compact('categories'));
     }
 
     /**
@@ -33,10 +37,15 @@ class ProductController extends Controller
     {
         //store
         $validatedData = $request->validate([
-            'name' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            'product_name' => 'required',
             'description' => 'required',
-            'price' => 'required',
+            'status' => 'required|in:active,inactive',
         ]);
+
+        Product::create($validatedData);
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -53,7 +62,8 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         //edit
-        return view('dashboard.product.edit');
+        $product = Product::findOrFail($id);
+        return view('dashboard.product.edit', compact('product'));
     }
 
     /**
@@ -61,7 +71,18 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //update
+        $validatedData = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            'product_name' => 'required',
+            'description' => 'required',
+            'status' => 'required|in:active,inactive',
+        ]);
+        
+        Product::findOrFail($id)->update($validatedData);
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -73,6 +94,6 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->delete();
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }

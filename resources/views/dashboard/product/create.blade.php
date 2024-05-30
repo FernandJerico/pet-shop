@@ -12,7 +12,7 @@
                         <h5 class="mb-0">Create Product</h5>
                     </div>
                     <div class="card-body">
-                        <form action="#" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label" for="name">Product Name</label>
@@ -32,11 +32,9 @@
                                 <select class="form-select @error('category') is-invalid @enderror" name="category"
                                     id="category">
                                     <option value="">Select Category</option>
-                                    {{-- @foreach ($categories as $category)
+                                    @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach --}}
-                                    <option value="Food">Food</option>
-                                    <option value="Accessories">Accessories</option>
+                                    @endforeach
                                 </select>
                                 @error('category')
                                     <div class="invalid-feedback">
@@ -46,16 +44,11 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="sub-category">Sub Category Product</label>
-                                <select class="form-select @error('sub-categiry') is-invalid @enderror" name="sub-category"
-                                    id="category">
+                                <select class="form-select @error('sub-category') is-invalid @enderror" name="sub-category"
+                                    id="sub-category">
                                     <option value="">Select Category First</option>
-                                    {{-- @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach --}}
-                                    <option value="Cat">Cat</option>
-                                    <option value="Dog">Dog</option>
                                 </select>
-                                @error('category')
+                                @error('sub-category')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

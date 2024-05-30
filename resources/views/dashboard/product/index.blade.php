@@ -25,6 +25,7 @@
                             <th>Data Created</th>
                             <th>Product</th>
                             <th>Description</th>
+                            <th>Images</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
