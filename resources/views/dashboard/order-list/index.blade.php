@@ -23,26 +23,30 @@
                         <tr>
                             <th>No</th>
                             <th>Date Created</th>
+                            <th>Order</th>
                             <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Unit</th>
-                            <th>Price</th>
                             <th>Size</th>
+                            <th>Unit</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        @foreach ($orderLists as $order)
+                        @foreach ($orderLists as $orderList)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                     <strong>{{ $order->created_at }}</strong>
                                 </td>
-                                <td>{{ $order->product->product_name }}</td>
-                                <td>{{ $order->quantity }}</td>
-                                <td>{{ $order->unit }}</td>
-                                <td>{{ $order->price }}</td>
-                                <td>{{ $order->size }}</td>
+                                <td>{{ $orderList->order->user->name }}</td>
+                                <td>{{ $orderList->product->product_name }}</td>
+                                <td>{{ $orderList->size }}</td>
+                                <td>{{ $orderList->unit }}</td>
+                                <td>{{ $orderList->quantity }}</td>
+                                <td>{{ $orderList->price }}</td>
+                                <td>{{ $orderList->total }}</td>
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -50,9 +54,11 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ route('order-list.edit', $order->id) }}"><i
+                                            <a class="dropdown-item"
+                                                href="{{ route('order-list.edit', $orderList->id) }}"><i
                                                     class="bx bx-edit-alt me-1"></i> Edit</a>
-                                            <form action="{{ route('order-list.destroy', $order->id) }}" method="POST">
+                                            <form action="{{ route('order-list.destroy', $orderList->id) }}"
+                                                method="POST">
                                                 <input type="hidden" name="_method" value="DELETE" />
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                                 <button type="submit" class="dropdown-item"><i
