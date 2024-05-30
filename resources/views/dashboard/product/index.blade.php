@@ -22,7 +22,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Data Created</th>
+                            <th>Date Created</th>
                             <th>Product</th>
                             <th>Description</th>
                             <th>Images</th>

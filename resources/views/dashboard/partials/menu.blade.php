@@ -29,8 +29,8 @@
                 <div data-i18n="Basic">Product List</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('doctors*') ? 'active' : '' }}">
-            <a href="#" class="menu-link">
+        <li class="menu-item {{ request()->is('inventories*') ? 'active' : '' }}">
+            <a href="{{ route('inventories.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-list-ul"></i>
                 <div data-i18n="Basic">Inventory List</div>
             </a>
