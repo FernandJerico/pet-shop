@@ -22,7 +22,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Data Created</th>
+                            <th>Date Created</th>
                             <th>Category</th>
                             <th>Sub Category</th>
                             <th>Description</th>
