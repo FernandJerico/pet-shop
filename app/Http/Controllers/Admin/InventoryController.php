@@ -63,7 +63,8 @@ class InventoryController extends Controller
     {
         //edit
         $inventory = Inventory::find($id);
-        return view('dashboard.inventory.edit', compact('inventory'));
+        $products = Product::all();
+        return view('dashboard.inventory.edit', compact('inventory', 'products'));
     }
 
     /**
