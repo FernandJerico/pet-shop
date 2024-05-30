@@ -15,7 +15,7 @@ class OrderListController extends Controller
     {
         //index
         $orderLists = OrderList::all();
-        return view('admin.order-list.index', compact('orderLists'));
+        return view('dashboard.order-list.index', compact('orderLists'));
     }
 
     /**
@@ -24,7 +24,7 @@ class OrderListController extends Controller
     public function create()
     {
         //create
-        return view('admin.order-list.create');
+        return view('dashboard.order-list.create');
     }
 
     /**
@@ -63,7 +63,7 @@ class OrderListController extends Controller
     {
         //edit
         $orderList = OrderList::findOrFail($id);
-        return view('admin.order-list.edit', compact('orderList'));
+        return view('dashboard.order-list.edit', compact('orderList'));
     }
 
     /**

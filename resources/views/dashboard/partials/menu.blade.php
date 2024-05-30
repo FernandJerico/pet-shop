@@ -35,8 +35,8 @@
                 <div data-i18n="Basic">Inventory List</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('doctor-schedules*') ? 'active' : '' }}">
-            <a href="#" class="menu-link">
+        <li class="menu-item {{ request()->is('order-list*') ? 'active' : '' }}">
+            <a href="{{ route('order-list.index') }}" class="menu-link">
                 <i class='menu-icon bx bx-calendar-check'></i>
                 <div data-i18n="Basic">Order List</div>
             </a>
