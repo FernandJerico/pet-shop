@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -24,7 +25,8 @@ class InventoryController extends Controller
     public function create()
     {
         //create
-        return view('dashboard.inventory.create');
+        $products = Product::all();
+        return view('dashboard.inventory.create', compact('products'));
     }
 
     /**

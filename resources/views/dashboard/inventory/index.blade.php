@@ -13,7 +13,7 @@
         <div class="card">
             <h5 class="card-header">Inventory List</h5>
             <div class="demo-inline-spacing px-3">
-                <a href="{{ route('sub-categories.create') }}" type="button" class="btn btn-primary text-white">
+                <a href="{{ route('inventories.create') }}" type="button" class="btn btn-primary text-white">
                     <span class="tf-icons bx bx-plus"></span> Create Inventory
                 </a>
             </div>
