@@ -26,11 +26,12 @@
                 <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url('/') }}">Home</a></li>
                 @foreach ($categories as $category)
                     @php
-                        $subCategories = $category->subCategories()->where('status', 'active')->get();
+                        $subCategories = $category->subCategories->where('status', 'active');
                     @endphp
                     @if ($subCategories->isEmpty())
-                        <li class="nav-item"><a class="nav-link" aria-current="page"
-                                href="#">{{ $category->name }}</a>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page"
+                                href="{{ route('category.products', $category->name) }}">{{ $category->name }}</a>
                         </li>
                     @else
                         <li class="nav-item dropdown">
@@ -38,8 +39,9 @@
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ $category->name }}</a>
                             <ul class="dropdown-menu p-0" aria-labelledby="navbarDropdown{{ $category->id }}">
                                 @foreach ($subCategories as $subCategory)
-                                    <li><a class="dropdown-item border-bottom"
-                                            href="#">{{ $subCategory->name }}</a>
+                                    <li>
+                                        <a class="dropdown-item border-bottom"
+                                            href="{{ route('subcategory.products', ['category' => $category->name, 'subcategory' => $subCategory->name]) }}">{{ $subCategory->name }}</a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -48,6 +50,7 @@
                 @endforeach
                 <li class="nav-item"><a class="nav-link" href="#">About</a></li>
             </ul>
+
             <div class="d-flex align-items-center">
                 @guest
                     <button class="btn btn-outline-dark ml-2" type="button" data-bs-toggle="modal"
