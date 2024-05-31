@@ -6,18 +6,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="login-form">
+                <form method="POST" action="{{ route('register') }}" id="login-form">
+                    @csrf
                     <div class="row align-items-center h-100">
                         <div class="col-lg-5 border-right">
                             <div class="form-group">
                                 <label for="" class="control-label">Firstname</label>
-                                <input type="text" class="form-control form-control-sm form" name="firstname"
-                                    required>
+                                <input type="text" class="form-control form-control-sm form" name="first_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="" class="control-label">Lastname</label>
-                                <input type="text" class="form-control form-control-sm form" name="lastname"
-                                    required>
+                                <input type="text" class="form-control form-control-sm form" name="last_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="" class="control-label">Contact</label>
@@ -26,15 +25,15 @@
                             <div class="form-group">
                                 <label for="" class="control-label">Gender</label>
                                 <select name="gender" id="" class="form-control form-select" required>
-                                    <option>Male</option>
-                                    <option>Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-7">
                             <div class="form-group">
                                 <label for="" class="control-label">Default Delivery Address</label>
-                                <textarea class="form-control form" rows='2' name="default_delivery_address"></textarea>
+                                <textarea class="form-control form" rows='2' name="address"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="" class="control-label">Email</label>
@@ -48,7 +47,7 @@
                             <div class="form-group d-flex justify-content-between mt-2">
                                 <a class="text-decoration-none" href="#" data-bs-toggle="modal"
                                     data-bs-target="#loginModal">Already have an Account</a>
-                                <button class="btn btn-primary btn-flat">Register</button>
+                                <button type="submit" class="btn btn-primary btn-flat">Register</button>
                             </div>
                         </div>
                     </div>
