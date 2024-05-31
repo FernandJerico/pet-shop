@@ -8,6 +8,11 @@
     @php
         $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
     @endphp
+    @if (!empty($meta['logo']))
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($meta['logo']) }}" />
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo.png') }}" />
+    @endif
     <title>
         @if (!empty($meta['name']))
             {{ $meta['name'] }}
