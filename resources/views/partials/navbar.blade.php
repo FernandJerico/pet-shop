@@ -10,7 +10,7 @@
                 alt="" loading="lazy">
             CLeoow
         </a>
-        <form class="form-inline" id="search-form" action="{{ url('products/search') }}" method="GET">
+        <form class="form-inline" id="search-form" action="#" method="GET">
             <div class="input-group">
                 <input class="form-control form-control-sm form" type="search" placeholder="Search" aria-label="Search"
                     name="search" value="{{ request('search') }}" aria-describedby="button-addon2">
@@ -80,25 +80,3 @@
         </div>
     </div>
 </nav>
-
-<script>
-    $(function() {
-        $('#login-btn').click(function() {
-            uni_modal("", "login.php")
-        })
-        $('#navbarResponsive').on('show.bs.collapse', function() {
-            $('#mainNav').addClass('navbar-shrink')
-        })
-        $('#navbarResponsive').on('hidden.bs.collapse', function() {
-            if ($('body').offset.top == 0)
-                $('#mainNav').removeClass('navbar-shrink')
-        })
-    })
-
-    $('#search-form').submit(function(e) {
-        e.preventDefault()
-        var sTxt = $('[name="search"]').val()
-        if (sTxt != '')
-            location.href = '{{ url('products/search') }}?search=' + sTxt;
-    })
-</script>
