@@ -10,13 +10,14 @@
                 alt="" loading="lazy">
             CLeoow
         </a>
-        <form class="form-inline" id="search-form" action="#" method="GET">
+        <form class="form-inline" id="search-form" action="{{ url('/') }}" method="GET">
             <div class="input-group">
                 <input class="form-control form-control-sm form" type="search" placeholder="Search" aria-label="Search"
-                    name="search" value="{{ request('search') }}" aria-describedby="button-addon2">
+                    name="search" value="{{ old('search', $search) }}" aria-describedby="button-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-success btn-sm m-0" type="submit" id="button-addon2"><i
-                            class="fa fa-search"></i></button>
+                    <button class="btn btn-outline-success btn-sm m-0" type="submit" id="button-addon2">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
         </form>

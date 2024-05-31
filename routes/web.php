@@ -8,14 +8,21 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Models\Category;
 use App\Models\Inventory;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    $search = $request->input('search', '');
     $categories = Category::where('status', 'active')->get();
-    $products = Product::where('status', 'active')->get();
+    $productsQuery = Product::where('status', 'active');
+    if ($search) {
+        $productsQuery->where('product_name', 'LIKE', "%{$search}%");
+    }
+    $products = $productsQuery->get();
     $inventory = Inventory::get();
-    return view('pages.index', compact('categories', 'products', 'inventory'));
+    return view('pages.index', compact('categories', 'products', 'inventory', 'search'));
 });
+
 
 Route::get('/detail/{id}', function ($id) {
     $categories = Category::where('status', 'active')->get();
