@@ -95,15 +95,33 @@
         $(document).ready(function() {
             $('#category').change(function() {
                 var selectedCategoryId = $(this).val();
+                var hasSubCategory = false;
+
                 $('#sub-category option').each(function() {
                     var categoryData = $(this).data('category');
                     if (categoryData == selectedCategoryId || categoryData == '') {
                         $(this).show();
+                        hasSubCategory = true;
                     } else {
                         $(this).hide();
                     }
                 });
-                $('#sub-category').val(''); // Reset subcategory selection
+
+                // Reset subcategory selection
+                $('#sub-category').val('');
+
+                // Check if any sub-categories are available for the selected category
+                if (!hasSubCategory) {
+                    // Add a default option if no sub-categories are available
+                    if ($('#sub-category option.default-option').length === 0) {
+                        $('#sub-category').append(
+                            '<option class="default-option" value="" disabled>No Sub Categories Available</option>'
+                        );
+                    }
+                } else {
+                    // Remove the default option if sub-categories are available
+                    $('#sub-category option.default-option').remove();
+                }
             });
         });
     </script>
