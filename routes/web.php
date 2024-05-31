@@ -54,8 +54,7 @@ Route::get('/admin-login', function () {
 })->name('admin-login');
 
 Route::get('/dashboard', function () {
-    $meta = SystemInfo::pluck('meta_value', 'meta_field')->toArray();
-    return view('dashboard.index', compact('meta'));
+    return view('dashboard.index');
 })->name('dashboard');
 
 Route::resource('products', ProductController::class);

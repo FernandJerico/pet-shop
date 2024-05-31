@@ -1,3 +1,6 @@
+@php
+    $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+@endphp
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <button class="navbar-toggler btn btn-sm" type="button" data-bs-toggle="collapse"
@@ -6,9 +9,18 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="{{ asset('assets/img/logo.png') }}" width="30" height="30" class="d-inline-block align-top"
-                alt="" loading="lazy">
-            CLeoow
+            @if (!empty($meta['logo']))
+                <img src="{{ Storage::url($meta['logo']) }}" width="30" height="30"
+                    class="d-inline-block align-top" alt="" loading="lazy">
+            @else
+                <img src="{{ asset('assets/img/logo.png') }}" width="30" height="30"
+                    class="d-inline-block align-top" alt="" loading="lazy">
+            @endif
+            @if (!empty($meta['short_name']))
+                {{ $meta['short_name'] }}
+            @else
+                CLeoow
+            @endif
         </a>
         <form class="form-inline" id="search-form" action="{{ url('/') }}" method="GET">
             <div class="input-group">
@@ -36,7 +48,8 @@
                     @else
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown{{ $category->id }}" href="#"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ $category->name }}</a>
+                                role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">{{ $category->name }}</a>
                             <ul class="dropdown-menu p-0" aria-labelledby="navbarDropdown{{ $category->id }}">
                                 @foreach ($subCategories as $subCategory)
                                     <li>
