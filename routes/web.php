@@ -36,6 +36,10 @@ Route::get('/checkout', function () {
     return view('pages.checkout', compact('categories'));
 });
 
+Route::get('/admin-login', function () {
+    return view('dashboard.login');
+})->name('admin-login');
+
 Route::get('/dashboard', function () {
     return view('dashboard.index');
 });
