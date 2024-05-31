@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\OrderListController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Models\Category;
 use App\Models\Inventory;
@@ -60,7 +61,8 @@ Route::resource('categories', CategoryController::class);
 Route::resource('sub-categories', SubCategoryController::class);
 Route::resource('inventories', InventoryController::class); 
 Route::resource('order-list', OrderListController::class);
-
+Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
 
 
 // Route::get('/category/{category}', function ($category) {
