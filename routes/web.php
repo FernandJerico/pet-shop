@@ -66,25 +66,20 @@ Route::get('settings', [SettingController::class, 'index'])->name('settings.inde
 Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
 
 
-// Route::get('/category/{category}', function ($category) {
-//     $categories = Category::where('status', 'active')->with('subcategories')->get();
-//     // Mengambil kategori berdasarkan nama
-//     $category = Category::where('name', $category)->firstOrFail();
-//     // Mengambil produk berdasarkan kategori
-//     $products = Product::where('status', 'active')->where('category_id', $category->id)->get();
-//     // Mengambil semua inventory
-//     $inventory = Inventory::get();
+Route::get('/category/{category}', function (Request $request, $category) {
+    $categories = Category::where('status', 'active')->with('subcategories')->get();
+    $category = Category::where('name', $category)->firstOrFail();
+    $products = Product::where('status', 'active')->where('category_id', $category->id)->get();
+    $inventory = Inventory::get();
+    $search = $request->input('search', '');
 
-//     return view('pages.product', compact('categories','category', 'products', 'inventory'));
-// })->name('category.products');
+    return view('pages.product', compact('categories','category', 'products', 'inventory', 'search'));
+})->name('category.products');
 
 Route::get('/category/{category}/subcategory/{subcategory}', function (Request $request, $categoryName, $subcategoryName) {
     $categories = Category::where('status', 'active')->with('subcategories')->get();
-    // Mengambil kategori berdasarkan nama
     $category = Category::where('name', $categoryName)->firstOrFail();
-    // Mengambil subkategori berdasarkan nama dan kategori
     $subcategory = $category->subCategories()->where('name', $subcategoryName)->firstOrFail();
-    // Mengambil semua inventory
     $inventory = Inventory::get();
 
     $search = $request->input('search', '');
