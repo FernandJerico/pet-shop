@@ -11,6 +11,7 @@ use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\SystemInfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (Request $request) {
@@ -33,7 +34,7 @@ Route::get('/detail/{id}', function (Request $request, $id) {
         ->where('id', '!=', $id)->inRandomOrder()->limit(4)->get();
 
     $search = $request->input('search', '');
-    
+
     return view('pages.product-detail', compact('product', 'categories', 'relatedProducts', 'search'));
 })->name('product.detail');
 
@@ -53,17 +54,7 @@ Route::get('/admin-login', function () {
     return view('dashboard.login');
 })->name('admin-login');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard');
 
-Route::resource('products', ProductController::class);
-Route::resource('categories', CategoryController::class);   
-Route::resource('sub-categories', SubCategoryController::class);
-Route::resource('inventories', InventoryController::class); 
-Route::resource('order-list', OrderListController::class);
-Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
-Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
 
 
 Route::get('/category/{category}', function (Request $request, $category) {
@@ -73,7 +64,7 @@ Route::get('/category/{category}', function (Request $request, $category) {
     $inventory = Inventory::get();
     $search = $request->input('search', '');
 
-    return view('pages.product', compact('categories','category', 'products', 'inventory', 'search'));
+    return view('pages.product', compact('categories', 'category', 'products', 'inventory', 'search'));
 })->name('category.products');
 
 Route::get('/category/{category}/subcategory/{subcategory}', function (Request $request, $categoryName, $subcategoryName) {
@@ -89,5 +80,23 @@ Route::get('/category/{category}/subcategory/{subcategory}', function (Request $
     }
     $products = $productsQuery->get();
 
-    return view('pages.product', compact('categories','category', 'subcategory', 'products', 'inventory', 'search'));
+    return view('pages.product', compact('categories', 'category', 'subcategory', 'products', 'inventory', 'search'));
 })->name('subcategory.products');
+Auth::routes();
+
+
+
+Route::name('admin.')->prefix('admin')->group(function () {
+    Route::middleware(['isAdmin'])->group(function () {
+        Route::get('/', function () {
+            return view('dashboard.index');
+        })->name('index');
+        Route::resource('products', ProductController::class);
+        Route::resource('categories', CategoryController::class);
+        Route::resource('sub-categories', SubCategoryController::class);
+        Route::resource('inventories', InventoryController::class);
+        Route::resource('order-list', OrderListController::class);
+        Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
+    });
+});
