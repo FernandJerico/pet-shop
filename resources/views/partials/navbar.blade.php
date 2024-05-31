@@ -49,7 +49,9 @@
             </ul>
             <div class="d-flex align-items-center">
                 @guest
-                    <button class="btn btn-outline-dark ml-2" id="login-btn" type="button">Login</button>
+                    <button class="btn btn-outline-dark ml-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#loginModal">Login</button>
+                    @include('partials.modal.login-modal')
                 @else
                     <a class="text-dark mr-2 nav-link" href="{{ url('cart') }}">
                         <i class="bi-cart-fill me-1"></i>
