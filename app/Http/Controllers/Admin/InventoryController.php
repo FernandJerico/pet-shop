@@ -45,7 +45,7 @@ class InventoryController extends Controller
 
         Inventory::create($request->all());
 
-        return redirect()->route('inventories.index')->with('success', 'Inventory created successfully.');
+        return redirect()->route('admin.inventories.index')->with('success', 'Inventory created successfully.');
     }
 
     /**
@@ -83,8 +83,8 @@ class InventoryController extends Controller
 
         $inventory = Inventory::find($id);
         $inventory->update($request->all());
-        
-        return redirect()->route('inventories.index')->with('success', 'Inventory updated successfully.');
+
+        return redirect()->route('admin.inventories.index')->with('success', 'Inventory updated successfully.');
     }
 
     /**
@@ -95,7 +95,7 @@ class InventoryController extends Controller
         //destroy
         $inventory = Inventory::find($id);
         $inventory->delete();
-        
-        return redirect()->route('inventories.index')->with('success', 'Inventory deleted successfully.');
+
+        return redirect()->route('admin.inventories.index')->with('success', 'Inventory deleted successfully.');
     }
 }

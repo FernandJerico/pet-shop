@@ -45,7 +45,7 @@ class OrderListController extends Controller
 
         OrderList::create($validatedData);
 
-        return redirect()->route('order-list.index')->with('success', 'Order list created successfully.');
+        return redirect()->route('admin.order-list.index')->with('success', 'Order list created successfully.');
     }
 
     /**
@@ -84,7 +84,7 @@ class OrderListController extends Controller
 
         OrderList::findOrFail($id)->update($validatedData);
 
-        return redirect()->route('order-list.index')->with('success', 'Order list updated successfully.');
+        return redirect()->route('admin.order-list.index')->with('success', 'Order list updated successfully.');
     }
 
     /**
@@ -95,6 +95,6 @@ class OrderListController extends Controller
         //destroy
         OrderList::findOrFail($id)->delete();
 
-        return redirect()->route('order-list.index')->with('success', 'Order list deleted successfully.');
+        return redirect()->route('admin.order-list.index')->with('success', 'Order list deleted successfully.');
     }
 }

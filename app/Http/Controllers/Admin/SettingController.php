@@ -68,6 +68,6 @@ class SettingController extends Controller
             );
         }
 
-        return redirect()->route('settings.index')->with('success', 'Meta data updated successfully');
+        return redirect()->route('admin.settings.index')->with('success', 'Meta data updated successfully');
     }
 }

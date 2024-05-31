@@ -47,12 +47,12 @@ class ProductController extends Controller
         ]);
 
         //store images
-        if($request->file('image')){
+        if ($request->file('image')) {
             $validatedData['image'] = $request->file('image')->storeAs('public/product-image', $validatedData['product_name'] . '.' . $request->file('image')->getClientOriginalExtension());
         }
 
         Product::create($validatedData);
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -98,10 +98,10 @@ class ProductController extends Controller
             $validatedData['image'] = $request->file('image')->storeAs('public/product-image', $validatedData['product_name'] . '.' . $request->file('image')->getClientOriginalExtension());
         }
 
-        
+
         $product->update($validatedData);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -112,11 +112,11 @@ class ProductController extends Controller
         //destroy
         $product = Product::find($id);
         //delete image from storage
-        if($product->image){
+        if ($product->image) {
             Storage::delete($product->image);
         }
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
     }
 }

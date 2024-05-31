@@ -43,7 +43,7 @@ class SubCategoryController extends Controller
         ]);
 
         SubCategory::create($request->all());
-        return redirect()->route('sub-categories.index')->with('success', 'Sub Category created successfully.');
+        return redirect()->route('admin.sub-categories.index')->with('success', 'Sub Category created successfully.');
     }
 
     /**
@@ -77,10 +77,10 @@ class SubCategoryController extends Controller
             'description' => 'required|string',
             'status' => 'required|in:active,inactive',
         ]);
-        
+
         SubCategory::findOrFail($id)->update($request->all());
 
-        return redirect()->route('sub-categories.index')->with('success', 'Sub Category updated successfully.');
+        return redirect()->route('admin.sub-categories.index')->with('success', 'Sub Category updated successfully.');
     }
 
     /**
@@ -90,6 +90,6 @@ class SubCategoryController extends Controller
     {
         //destroy
         SubCategory::findOrFail($id)->delete();
-        return redirect()->route('sub-categories.index')->with('success', 'Sub Category deleted successfully.');
+        return redirect()->route('admin.sub-categories.index')->with('success', 'Sub Category deleted successfully.');
     }
 }
