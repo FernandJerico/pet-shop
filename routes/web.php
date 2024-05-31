@@ -26,6 +26,16 @@ Route::get('/detail/{id}', function ($id) {
     return view('pages.product-detail', compact('product', 'categories', 'relatedProducts'));
 })->name('product.detail');
 
+Route::get('/cart', function () {
+    $categories = Category::where('status', 'active')->get();
+    return view('pages.cart', compact('categories'));
+});
+
+Route::get('/checkout', function () {
+    $categories = Category::where('status', 'active')->get();
+    return view('pages.checkout', compact('categories'));
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard.index');
 });
