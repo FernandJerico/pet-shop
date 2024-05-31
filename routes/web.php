@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Models\Category;
 use App\Models\Inventory;
 use App\Models\Product;
+use App\Models\SystemInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,7 +54,8 @@ Route::get('/admin-login', function () {
 })->name('admin-login');
 
 Route::get('/dashboard', function () {
-    return view('dashboard.index');
+    $meta = SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+    return view('dashboard.index', compact('meta'));
 })->name('dashboard');
 
 Route::resource('products', ProductController::class);

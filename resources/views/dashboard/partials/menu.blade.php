@@ -1,8 +1,15 @@
+@php
+    $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+@endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="/" class="app-brand-link">
-
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">Pet Shop</span>
+        <a href="{{ route('dashboard') }}" class="app-brand-link">
+            @if (!empty($meta['logo']))
+                <img src="{{ Storage::url($meta['logo']) }}" alt="logo" width="55px">
+            @else
+                <img src="{{ asset('assets/img/logo.png') }}" alt="logo" width="55px">
+            @endif
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ $meta['short_name'] ?? 'CLeoow' }}</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SystemInfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -27,6 +28,14 @@ class SettingController extends Controller
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
+            // delete old logo
+            $oldLogo = SystemInfo::where('meta_field', 'logo')->first();
+            if ($oldLogo) {
+                $oldLogoPath = $oldLogo->meta_value;
+                if (Storage::disk('public')->exists($oldLogoPath)) {
+                    Storage::disk('public')->delete($oldLogoPath);
+                }
+            }
             $logoPath = $request->file('logo')->store('system', 'public');
             SystemInfo::updateOrCreate(
                 ['meta_field' => 'logo'],
@@ -36,6 +45,14 @@ class SettingController extends Controller
 
         // Handle cover upload
         if ($request->hasFile('cover')) {
+            // delete old cover
+            $oldCover = SystemInfo::where('meta_field', 'cover')->first();
+            if ($oldCover) {
+                $oldCoverPath = $oldCover->meta_value;
+                if (Storage::disk('public')->exists($oldCoverPath)) {
+                    Storage::disk('public')->delete($oldCoverPath);
+                }
+            }
             $coverPath = $request->file('cover')->store('system', 'public');
             SystemInfo::updateOrCreate(
                 ['meta_field' => 'cover'],
