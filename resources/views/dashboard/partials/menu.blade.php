@@ -14,8 +14,8 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item {{ request()->is('/') ? 'active' : '' }}">
-            <a href="/" class="menu-link">
+        <li class="menu-item {{ request()->is('dashboard*') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
@@ -57,8 +57,8 @@
                 <div data-i18n="Basic">Sub Category List</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('doctor-schedules*') ? 'active' : '' }}">
-            <a href="#" class="menu-link">
+        <li class="menu-item {{ request()->is('settings*') ? 'active' : '' }}">
+            <a href="{{ route('settings.index') }}" class="menu-link">
                 <i class='menu-icon bx bx-cog'></i>
                 <div data-i18n="Basic">Settings</div>
             </a>

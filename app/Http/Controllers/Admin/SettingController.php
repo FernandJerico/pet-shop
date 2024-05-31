@@ -16,11 +16,41 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        $metaData = $request->except('_token');
-        foreach ($metaData as $field => $value) {
-            SystemInfo::where('meta_field', $field)->update(['meta_value' => $value]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $metaData = $request->except('_token', 'logo', 'cover');
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('system', 'public');
+            SystemInfo::updateOrCreate(
+                ['meta_field' => 'logo'],
+                ['meta_value' => $logoPath]
+            );
         }
-        
+
+        // Handle cover upload
+        if ($request->hasFile('cover')) {
+            $coverPath = $request->file('cover')->store('system', 'public');
+            SystemInfo::updateOrCreate(
+                ['meta_field' => 'cover'],
+                ['meta_value' => $coverPath]
+            );
+        }
+
+        // Update other meta fields
+        foreach ($metaData as $field => $value) {
+            SystemInfo::updateOrCreate(
+                ['meta_field' => $field],
+                ['meta_value' => $value]
+            );
+        }
+
         return redirect()->route('settings.index')->with('success', 'Meta data updated successfully');
     }
 }

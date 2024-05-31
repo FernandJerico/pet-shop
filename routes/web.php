@@ -54,7 +54,7 @@ Route::get('/admin-login', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard.index');
-});
+})->name('dashboard');
 
 Route::resource('products', ProductController::class);
 Route::resource('categories', CategoryController::class);   
