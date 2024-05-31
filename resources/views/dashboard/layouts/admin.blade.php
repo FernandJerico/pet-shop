@@ -8,12 +8,22 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Dashboard - Pet Shop</title>
+    @php
+        $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+    @endphp
+    @if (!empty($meta['logo']))
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($meta['logo']) }}" />
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo.png') }}" />
+    @endif
 
-    <meta name="description" content="" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
+    <title>
+        @if (!empty($meta['short_name']))
+            Dashboard | {{ $meta['short_name'] }}
+        @else
+            Dashboard | Pet Shop
+        @endif
+    </title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

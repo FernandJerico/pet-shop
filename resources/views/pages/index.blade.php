@@ -41,4 +41,17 @@
             @endforeach
         </div>
     </div>
+    @php
+        $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+    @endphp
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var mainHeader = document.getElementById('main-header');
+            var coverImage =
+                '{{ !empty($meta['cover']) ? Storage::url($meta['cover']) : asset('assets/img/default-cover.jpg') }}';
+            mainHeader.style.backgroundImage = 'url(' + coverImage + ')';
+            mainHeader.style.backgroundSize = 'cover';
+            mainHeader.style.backgroundPosition = 'center';
+        });
+    </script>
 @endsection

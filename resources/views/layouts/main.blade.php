@@ -5,7 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pet Shop Food and Accessories</title>
+    @php
+        $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+    @endphp
+    @if (!empty($meta['logo']))
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($meta['logo']) }}" />
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo.png') }}" />
+    @endif
+    <title>
+        @if (!empty($meta['name']))
+            {{ $meta['name'] }}
+        @else
+            Pet Shop Food and Accessories Shop
+        @endif
+    </title>
 
     {{-- Main CSS --}}
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">

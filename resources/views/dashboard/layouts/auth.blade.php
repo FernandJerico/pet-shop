@@ -7,12 +7,21 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>CLeoow | Auth</title>
-
-    <meta name="description" content="" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+    @php
+        $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+    @endphp
+    @if (!empty($meta['logo']))
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($meta['logo']) }}" />
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo.png') }}" />
+    @endif
+    <title>
+        @if (!empty($meta['short_name']))
+            Auth | {{ $meta['short_name'] }}
+        @else
+            Auth | CLeoow
+        @endif
+    </title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

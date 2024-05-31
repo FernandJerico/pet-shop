@@ -1,8 +1,15 @@
+@php
+    $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+@endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="/" class="app-brand-link">
-
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">Pet Shop</span>
+        <a href="{{ route('dashboard') }}" class="app-brand-link">
+            @if (!empty($meta['logo']))
+                <img src="{{ Storage::url($meta['logo']) }}" alt="logo" width="55px">
+            @else
+                <img src="{{ asset('assets/img/logo.png') }}" alt="logo" width="55px">
+            @endif
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ $meta['short_name'] ?? 'CLeoow' }}</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -14,8 +21,8 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item {{ request()->is('/') ? 'active' : '' }}">
-            <a href="/" class="menu-link">
+        <li class="menu-item {{ request()->is('dashboard*') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
@@ -57,8 +64,8 @@
                 <div data-i18n="Basic">Sub Category List</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('doctor-schedules*') ? 'active' : '' }}">
-            <a href="#" class="menu-link">
+        <li class="menu-item {{ request()->is('settings*') ? 'active' : '' }}">
+            <a href="{{ route('settings.index') }}" class="menu-link">
                 <i class='menu-icon bx bx-cog'></i>
                 <div data-i18n="Basic">Settings</div>
             </a>
