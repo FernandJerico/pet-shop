@@ -54,17 +54,7 @@ Route::get('/admin-login', function () {
     return view('dashboard.login');
 })->name('admin-login');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard');
 
-Route::resource('products', ProductController::class);
-Route::resource('categories', CategoryController::class);
-Route::resource('sub-categories', SubCategoryController::class);
-Route::resource('inventories', InventoryController::class);
-Route::resource('order-list', OrderListController::class);
-Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
-Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
 
 
 Route::get('/category/{category}', function (Request $request, $category) {
@@ -94,4 +84,19 @@ Route::get('/category/{category}/subcategory/{subcategory}', function (Request $
 })->name('subcategory.products');
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::name('admin.')->prefix('admin')->group(function () {
+    Route::middleware(['isAdmin'])->group(function () {
+        Route::get('/', function () {
+            return view('dashboard.index');
+        })->name('index');
+        Route::resource('products', ProductController::class);
+        Route::resource('categories', CategoryController::class);
+        Route::resource('sub-categories', SubCategoryController::class);
+        Route::resource('inventories', InventoryController::class);
+        Route::resource('order-list', OrderListController::class);
+        Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
+    });
+});

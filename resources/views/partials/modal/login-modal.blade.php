@@ -7,7 +7,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="login-form">
+                <form method="POST" action="{{ route('login') }}" id="login-form">
+                    @csrf
                     <div class="form-group">
                         <label for="" class="control-label">Email</label>
                         <input type="email" class="form-control form" name="email" required>
@@ -20,7 +21,7 @@
                         <a href="#" class="text-decoration-none" data-bs-toggle="modal"
                             data-bs-target="#registerModal">Create
                             Account</a>
-                        <button class="btn btn-primary btn-flat">Login</button>
+                        <button type="submit" class="btn btn-primary btn-flat">Login</button>
                     </div>
                 </form>
             </div>
