@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -26,7 +27,7 @@ class ProductController extends Controller
     public function create()
     {
         //create
-        $categories = Category::all();
+        $categories = Category::with('subCategories')->get();
         return view('dashboard.product.create', compact('categories'));
     }
 
@@ -42,7 +43,13 @@ class ProductController extends Controller
             'product_name' => 'required',
             'description' => 'required',
             'status' => 'required|in:active,inactive',
+            'image' => 'required|image|max:2048',
         ]);
+
+        //store images
+        if($request->file('image')){
+            $validatedData['image'] = $request->file('image')->storeAs('public/product-image', $validatedData['product_name'] . '.' . $request->file('image')->getClientOriginalExtension());
+        }
 
         Product::create($validatedData);
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
@@ -63,13 +70,14 @@ class ProductController extends Controller
     {
         //edit
         $product = Product::findOrFail($id);
-        return view('dashboard.product.edit', compact('product'));
+        $categories = Category::with('subCategories')->get();
+        return view('dashboard.product.edit', compact('product', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
         //update
         $validatedData = $request->validate([
@@ -78,9 +86,20 @@ class ProductController extends Controller
             'product_name' => 'required',
             'description' => 'required',
             'status' => 'required|in:active,inactive',
+            'image' => 'image|max:2048',
         ]);
+
+        // Periksa apakah ada foto baru diunggah
+        if ($request->hasFile('image')) {
+            // Hapus foto lama dari storage
+            Storage::delete($product->image);
+
+            // Simpan foto baru di dalam storage
+            $validatedData['image'] = $request->file('image')->storeAs('public/product-image', $validatedData['product_name'] . '.' . $request->file('image')->getClientOriginalExtension());
+        }
+
         
-        Product::findOrFail($id)->update($validatedData);
+        $product->update($validatedData);
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
@@ -92,6 +111,10 @@ class ProductController extends Controller
     {
         //destroy
         $product = Product::find($id);
+        //delete image from storage
+        if($product->image){
+            Storage::delete($product->image);
+        }
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');

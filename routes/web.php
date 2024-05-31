@@ -11,7 +11,7 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
-Route::resource('products', ProductController::class);    
+Route::resource('products', ProductController::class);
 Route::resource('categories', CategoryController::class);   
 Route::resource('sub-categories', SubCategoryController::class);
 Route::resource('inventories', InventoryController::class); 

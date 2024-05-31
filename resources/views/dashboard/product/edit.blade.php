@@ -12,16 +12,19 @@
                         <h5 class="mb-0">Edit Product</h5>
                     </div>
                     <div class="card-body">
-                        <form action="#" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('products.update', $product->id) }}" method="POST"
+                            enctype="multipart/form-data">
+                            @method('PUT')
                             @csrf
                             <div class="mb-3">
-                                <label class="form-label" for="name">Product Name</label>
+                                <label class="form-label" for="product_name">Product Name</label>
                                 <input type="text"
-                                    class="form-control @error('name')
+                                    class="form-control @error('product_name')
                                 is-invalid
                             @enderror"
-                                    id="name" placeholder="Royal Canin" name="name" value="{{ $product->name }}" />
-                                @error('name')
+                                    id="product_name" placeholder="Royal Canin" name="product_name"
+                                    value="{{ $product->product_name }}" />
+                                @error('product_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -29,44 +32,42 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="category">Category Product</label>
-                                <select class="form-select @error('category') is-invalid @enderror" name="category"
+                                <select class="form-select @error('category_id') is-invalid @enderror" name="category_id"
                                     id="category">
                                     <option value="">Select Category</option>
-                                    {{-- @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach --}}
-                                    <option value="Food">Food</option>
-                                    <option value="Accessories">Accessories</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}</option>
+                                    @endforeach
                                 </select>
-                                @error('category')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                @error('category_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="sub-category">Sub Category Product</label>
-                                <select class="form-select @error('sub-categiry') is-invalid @enderror" name="sub-category"
-                                    id="category">
-                                    <option value="">Select Category First</option>
-                                    {{-- @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach --}}
-                                    <option value="Cat">Cat</option>
-                                    <option value="Dog">Dog</option>
+                                <select class="form-select @error('sub_category_id') is-invalid @enderror"
+                                    name="sub_category_id" id="sub-category">
+                                    <option value="">Select Sub Category</option>
+                                    @foreach ($categories as $category)
+                                        @foreach ($category->subCategories as $subCategory)
+                                            <option value="{{ $subCategory->id }}" data-category="{{ $category->id }}"
+                                                {{ $product->sub_category_id == $subCategory->id ? 'selected' : '' }}>
+                                                {{ $subCategory->name }}</option>
+                                        @endforeach
+                                    @endforeach
                                 </select>
-                                @error('category')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                @error('sub_category_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 @error('description')
-                                    <p class="text-danger">{{ $message }}</p>
+                                    <div class="text-danger">{{ $message }}</div>
                                 @enderror
-                                <input id="description" type="hidden" name="description" value="{{ old('description') }}"
+                                <input id="description" type="hidden" name="description"
                                     value="{{ $product->description }}">
                                 <trix-editor input="description"></trix-editor>
                             </div>
@@ -74,27 +75,26 @@
                                 <label class="form-label">Status</label>
                                 <div class="selectgroup w-100">
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="status" value="Active" class="selectgroup-input"
-                                            checked="">
+                                        <input type="radio" name="status" value="active" class="selectgroup-input"
+                                            @if ($product->status == 'active') checked @endif>
                                         <span class="selectgroup-button">Active</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="status" value="Not Active" class="selectgroup-input">
+                                        <input type="radio" name="status" value="inactive" class="selectgroup-input"
+                                            @if ($product->status == 'inactive') checked @endif>
                                         <span class="selectgroup-button">Not Active</span>
                                     </label>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="images" class="form-label">Images</label>
-                                <input
-                                    class="form-control @error('images')
-                                is-invalid
-                            @enderror"
-                                    type="file" id="images" name="images">
-                                @error('images')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <label for="image" class="form-label">Image</label>
+                                @if ($product->image)
+                                    <p>Current Image: {{ $product->image }}</p>
+                                @endif
+                                <input class="form-control @error('image') is-invalid @enderror" type="file"
+                                    id="image" name="image">
+                                @error('image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <button type="submit" class="btn btn-primary">Edit</button>

@@ -39,7 +39,14 @@
                                 </td>
                                 <td>{{ $product->product_name }}</td>
                                 <td>{!! $product->description !!}</td>
-                                <td></td>
+                                <td>
+                                    @if ($product->image == null)
+                                        <img src="{{ asset('assets/img/avatars/no-photo.png') }}" alt="no-photo"
+                                            height="25">
+                                    @else
+                                        <img src="{{ Storage::url($product->image) }}" alt="photo" height="25">
+                                    @endif
+                                </td>
                                 <td>
                                     @switch($product->status)
                                         @case('active')
