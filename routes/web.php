@@ -6,12 +6,25 @@ use App\Http\Controllers\Admin\OrderListController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Models\Category;
+use App\Models\Inventory;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $categories = Category::where('status', 'active')->get();
-    return view('pages.index', compact('categories'));
+    $products = Product::where('status', 'active')->get();
+    $inventory = Inventory::get();
+    return view('pages.index', compact('categories', 'products', 'inventory'));
 });
+
+Route::get('/detail/{id}', function ($id) {
+    $categories = Category::where('status', 'active')->get();
+    $product = Product::find($id);
+    $categoryId = $product->category_id;
+    $relatedProducts = Product::where('category_id', $categoryId)
+        ->where('id', '!=', $id)->inRandomOrder()->limit(4)->get();
+    return view('pages.product-detail', compact('product', 'categories', 'relatedProducts'));
+})->name('product.detail');
 
 Route::get('/dashboard', function () {
     return view('dashboard.index');
