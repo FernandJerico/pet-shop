@@ -70,23 +70,11 @@ $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
                     data-bs-target="#loginModal">Login</button>
                 @include('partials.modal.login-modal')
                 @else
-                <a class="text-dark mr-2 nav-link" href="{{ url('cart') }}">
+                <a class="text-dark nav-link" href="{{ url('cart') }}" style="margin-right: 10px">
                     <i class="bi-cart-fill me-1"></i>
                     Cart
                     <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart-count">
-                        {{-- @php
-                        if (isset($_SESSION['userdata']['id'])):
-                        $count = $conn
-                        ->query(
-                        'SELECT SUM(quantity) as items from `cart` where client_id =' .
-                        $_settings->userdata('id'),
-                        )
-                        ->fetch_assoc()['items'];
-                        echo $count > 0 ? $count : 0;
-                        else:
-                        echo '0';
-                        endif;
-                        @endphp --}}
+                        {{ auth()->user()->carts->count() }}
                     </span>
                 </a>
                 <a href="" class="text-dark nav-link"><b>Hi,

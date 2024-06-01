@@ -6,20 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @php
-        $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
+    $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
     @endphp
     @if (!empty($meta['logo']))
-        <link rel="icon" type="image/x-icon" href="{{ Storage::url($meta['logo']) }}" />
+    <link rel="icon" type="image/x-icon" href="{{ Storage::url($meta['logo']) }}" />
     @else
-        <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo.png') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo.png') }}" />
     @endif
     <title>
         @if (!empty($meta['name']))
-            {{ $meta['name'] }}
+        {{ $meta['name'] }}
         @else
-            Pet Shop Food and Accessories Shop
+        Pet Shop Food and Accessories Shop
         @endif
     </title>
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Main CSS --}}
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
@@ -46,7 +49,7 @@
     </script>
 
     {{-- Main JS --}}
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('assets/js/script.js') }}"></script>
 </body>
 
 </html>

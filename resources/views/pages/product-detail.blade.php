@@ -37,10 +37,11 @@
                             data-id="{{ $item->id }}">{{ $item->size }}</button></span>
                     @endforeach
                 </div>
-                <form action="" id="add-cart">
+                <form action="{{ route('cart.add') }}" method="POST" id="add-cart">
+                    @csrf
                     <div class="d-flex">
-                        <input type="hidden" name="price" value="#">
-                        <input type="hidden" name="inventory_id" value="#">
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="inventory_id" value="" id="inventory">
                         <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
                             style="max-width: 3rem" name="quantity" />
                         <button class="btn btn-outline-dark flex-shrink-0" type="submit">
@@ -102,6 +103,7 @@
 
             document.getElementById('price').textContent = selectedInventory.price.toLocaleString('id-ID');
             document.getElementById('avail').textContent = selectedInventory.quantity;
+            document.getElementById('inventory').value = selectedInventory.id;
         }
 
         const sizeButtons = document.querySelectorAll('.p-size');
