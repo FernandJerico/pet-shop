@@ -44,18 +44,27 @@
                         <td>
                             @foreach ($transaction->transactionDetails as $detail)
                             <ul>
-                                <li>{{ $detail->product->product_name }} - {{ $detail->inventory->size }}</li>
+                                <li>{{ $detail->product->product_name }} - {{ $detail->inventory->size }} - {{
+                                    $detail->quantity }} {{ $detail->inventory->unit }}</li>
                             </ul>
 
                             @endforeach
                         </td>
                         <td>Rp {{ number_format($transaction->amount) }}</td>
-                        <td>{{ $transaction->status }}</td>
+                        <td>
+                            @if ($transaction->status == 'pending')
+                            <span class="badge bg-label-warning me-1">pending</span>
+                            @elseif ($transaction->status == 'success')
+                            <span class="badge bg-label-primary me-1">success</span>
+                            @else
+                            <span class="badge bg-label-danger me-1">cancel</span>
+                            @endif
+                        </td>
                         <td>
                             @if ($transaction->paid == 0)
-                            no
+                            <span class="badge bg-label-dark me-1">no</span>
                             @else
-                            yes
+                            <span class="badge bg-label-primary me-1">yes</span>
                             @endif
                         </td>
                         <td>
