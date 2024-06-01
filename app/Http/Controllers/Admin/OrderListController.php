@@ -99,4 +99,12 @@ class OrderListController extends Controller
 
         return redirect()->route('admin.order-list.index')->with('success', 'Order list deleted successfully.');
     }
+
+    public function markAsPaid(string $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->update(['paid' => 1]);
+
+        return redirect()->route('admin.order-list.index')->with('success', 'Order list marked as paid.');
+    }
 }

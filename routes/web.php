@@ -89,6 +89,7 @@ Route::name('admin.')->prefix('admin')->group(function () {
         Route::resource('sub-categories', SubCategoryController::class);
         Route::resource('inventories', InventoryController::class);
         Route::resource('order-list', OrderListController::class);
+        Route::put('order-list/update-paid/{id}', [OrderListController::class, 'markAsPaid'])->name('order-list.update-paid');
         Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
     });

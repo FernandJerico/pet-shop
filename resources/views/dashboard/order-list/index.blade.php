@@ -77,6 +77,15 @@
                                     <a class="dropdown-item"
                                         href="{{ route('admin.order-list.edit', $transaction->id) }}"><i
                                             class="bx bx-edit-alt me-1"></i> Edit</a>
+                                    <form action="{{ route('admin.order-list.update-paid', $transaction->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bx bx-wallet me-1"></i>
+                                            Mark as Paid
+                                        </button>
+                                    </form>
                                     <form action="{{ route('admin.order-list.destroy', $transaction->id) }}"
                                         method="POST">
                                         <input type="hidden" name="_method" value="DELETE" />
