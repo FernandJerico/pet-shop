@@ -26,6 +26,7 @@ class TransactionController extends Controller
     {
         $user_id = Auth::id();
         $inventory = Inventory::find($request->inventory_id);
+        $cart = Cart::where('user_id', $user_id)->where('inventory_id', $inventory->id)->first();
         $data = $request->all();
 
         $total = $data['quantity'] * $inventory->price;
@@ -33,7 +34,13 @@ class TransactionController extends Controller
         $data['user_id'] = $user_id;
         $data['total'] = $total;
 
-        Cart::create($data);
+        if ($cart) {
+            $cart->quantity += $data['quantity'];
+            $cart->total += $total;
+            $cart->save();
+        } else {
+            Cart::create($data);
+        }
 
         return redirect()->back();
     }
