@@ -82,9 +82,13 @@ Route::get('/category/{category}/subcategory/{subcategory}', function (Request $
 
     return view('pages.product', compact('categories', 'category', 'subcategory', 'products', 'inventory', 'search'));
 })->name('subcategory.products');
+
 Auth::routes();
 
-
+Route::middleware(['isAuth'])->group(function () {
+    Route::get('cart', [App\Http\Controllers\User\TransactionController::class, 'cart'])->name('cart');
+    Route::get('checkout', [App\Http\Controllers\User\TransactionController::class, 'checkout'])->name('checkout');
+});
 
 Route::name('admin.')->prefix('admin')->group(function () {
     Route::middleware(['isAdmin'])->group(function () {
