@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Models\Category;
 use App\Models\Inventory;
 use App\Models\Product;
-use App\Models\SystemInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +23,7 @@ Route::get('/', function (Request $request) {
     $products = $productsQuery->get();
     $inventory = Inventory::get();
     return view('pages.index', compact('categories', 'products', 'inventory', 'search'));
-});
+})->name('index');
 
 Route::get('/detail/{id}', function (Request $request, $id) {
     $categories = Category::where('status', 'active')->get();
@@ -37,18 +36,6 @@ Route::get('/detail/{id}', function (Request $request, $id) {
 
     return view('pages.product-detail', compact('product', 'categories', 'relatedProducts', 'search'));
 })->name('product.detail');
-
-Route::get('/cart', function (Request $request) {
-    $categories = Category::where('status', 'active')->get();
-    $search = $request->input('search', '');
-    return view('pages.cart', compact('categories', 'search'));
-});
-
-Route::get('/checkout', function (Request $request) {
-    $categories = Category::where('status', 'active')->get();
-    $search = $request->input('search', '');
-    return view('pages.checkout', compact('categories', 'search'));
-});
 
 Route::get('/admin-login', function () {
     return view('dashboard.login');
@@ -91,7 +78,8 @@ Route::middleware(['isAuth'])->group(function () {
     Route::put('cart/update/qty', [App\Http\Controllers\User\TransactionController::class, 'updateQTY'])->name('cart.update.qty');
     Route::delete('cart/delete/{id}', [App\Http\Controllers\User\TransactionController::class, 'deleteCartByID'])->name('cart.delete.id');
     Route::delete('cart/delete', [App\Http\Controllers\User\TransactionController::class, 'deleteAllCart'])->name('cart.delete');
-    Route::get('checkout', [App\Http\Controllers\User\TransactionController::class, 'checkout'])->name('checkout');
+    Route::get('checkout/preview', [App\Http\Controllers\User\TransactionController::class, 'checkoutPreview'])->name('checkout.preview');
+    Route::post('checkout', [App\Http\Controllers\User\TransactionController::class, 'checkout'])->name('checkout');
 });
 
 Route::name('admin.')->prefix('admin')->group(function () {

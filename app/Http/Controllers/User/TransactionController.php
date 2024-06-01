@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Inventory;
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -78,10 +80,53 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function checkoutPreview(Request $request)
+    {
+        $categories = Category::where('status', 'active')->get();
+        $search = $request->input('search', '');
+
+        $carts = Cart::where('user_id', Auth::id())->get();
+        $grand_total = $carts->sum('total');
+
+        return view('pages.checkout', compact('categories', 'search', 'grand_total'));
+    }
+
     public function checkout(Request $request)
     {
         $categories = Category::where('status', 'active')->get();
         $search = $request->input('search', '');
-        return view('pages.checkout', compact('categories', 'search'));
+
+        $carts = Cart::where('user_id', Auth::id())->get();
+        $grand_total = $carts->sum('total');
+
+        if (isset($request->cod)) {
+            $payment_method = 'Cash on Delivery';
+        } else {
+            $payment_method = 'Whatsapp';
+        }
+
+        $transaction = Transaction::create([
+            'user_id' => Auth::id(),
+            'delivery_address' => $request->delivery_address,
+            'payment_method' => $payment_method,
+            'amount' => $grand_total,
+            'status' => 'pending',
+            'paid' => 0,
+        ]);
+
+        foreach ($carts as $cart) {
+            TransactionDetail::create([
+                'transaction_id' => $transaction->id,
+                'product_id' => $cart->product_id,
+                'user_id' => Auth::id(),
+                'inventory_id' => $cart->inventory_id,
+                'quantity' => $cart->quantity,
+                'total' => $cart->total,
+            ]);
+
+            Cart::destroy($cart->id);
+        }
+
+        return redirect()->route('index')->with('success', 'Checkout successfully.');
     }
 }

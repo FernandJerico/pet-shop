@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="d-flex w-100 justify-content-end mt-2">
-            <a href="#" class="btn btn-sm btn-flat btn-dark">Checkout</a>
+            <a href="{{ route('checkout.preview') }}" class="btn btn-sm btn-flat btn-dark">Checkout</a>
         </div>
     </div>
 </div>
