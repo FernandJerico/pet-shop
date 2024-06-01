@@ -38,6 +38,20 @@ class TransactionController extends Controller
         return redirect()->back();
     }
 
+    public function deleteCartByID(string $id)
+    {
+        Cart::find($id)->delete();
+
+        return redirect()->back();
+    }
+
+    public function deleteAllCart()
+    {
+        Cart::where('user_id', Auth::id())->delete();
+
+        return redirect()->back();
+    }
+
     public function checkout(Request $request)
     {
         $categories = Category::where('status', 'active')->get();

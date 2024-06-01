@@ -5,7 +5,14 @@
     <div class="container">
         <div class="row">
             <div class="col d-flex justify-content-end mb-2">
-                <button class="btn btn-outline-dark btn-flat btn-sm" type="button" id="empty_cart">Empty Cart</button>
+                <form action="{{ route('cart.delete') }}" method="POST">
+                    @method('delete')
+                    @csrf
+                    <button onclick="return confirm('Are you sure?')" class="btn btn-outline-dark btn-flat btn-sm"
+                        id="empty_cart">
+                        Empty Cart
+                    </button>
+                </form>
             </div>
         </div>
         <div class="card rounded-0">
@@ -15,8 +22,15 @@
                 @foreach ($carts as $cart)
                 <div class="d-flex w-100 justify-content-between  mb-2 py-2 border-bottom cart-item">
                     <div class="d-flex align-items-center col-8">
-                        <span class="mr-2"><a href="#" class="btn btn-sm btn-outline-danger rem_item"
-                                data-id="{{ $cart->id }}"><i class="fa fa-trash"></i></a></span>
+                        <form action="{{ route('cart.delete.id', $cart->id) }}" method="POST">
+                            @method('delete')
+                            @csrf
+                            <button onclick="return confirm('Are you sure?')">
+                                <span class="mr-2"><a class="btn btn-sm btn-outline-danger rem_item"
+                                        data-id="{{ $cart->id }}"><i class="fa fa-trash"></i></a></span>
+                            </button>
+                        </form>
+
                         <img src="{{ Storage::url($cart->product->image) }}" loading="lazy"
                             class="cart-prod-img mr-2 mr-sm-2 border" alt="">
                         <div>
@@ -52,7 +66,7 @@
                         <h4>Grand Total:</h4>
                     </div>
                     <div class="col d-flex justify-content-end">
-                        @if ($cart)
+                        @if (isset($cart))
                         <h4 id="grand-total">{{ number_format($grand_total) }}</h4>
                         @else
                         <h4 id="grand-total">-</h4>
