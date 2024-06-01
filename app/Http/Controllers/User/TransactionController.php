@@ -93,9 +93,6 @@ class TransactionController extends Controller
 
     public function checkout(Request $request)
     {
-        $categories = Category::where('status', 'active')->get();
-        $search = $request->input('search', '');
-
         $carts = Cart::where('user_id', Auth::id())->get();
         $grand_total = $carts->sum('total');
 
@@ -123,6 +120,10 @@ class TransactionController extends Controller
                 'quantity' => $cart->quantity,
                 'total' => $cart->total,
             ]);
+
+            $inventory = Inventory::find($cart->inventory_id);
+            $inventory->quantity -= $cart->quantity;
+            $inventory->save();
 
             Cart::destroy($cart->id);
         }

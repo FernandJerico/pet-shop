@@ -41,9 +41,6 @@ Route::get('/admin-login', function () {
     return view('dashboard.login');
 })->name('admin-login');
 
-
-
-
 Route::get('/category/{category}', function (Request $request, $category) {
     $categories = Category::where('status', 'active')->with('subcategories')->get();
     $category = Category::where('name', $category)->firstOrFail();

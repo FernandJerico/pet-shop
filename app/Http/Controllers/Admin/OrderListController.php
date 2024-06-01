@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderList;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class OrderListController extends Controller
@@ -14,8 +15,9 @@ class OrderListController extends Controller
     public function index()
     {
         //index
-        $orderLists = OrderList::all();
-        return view('dashboard.order-list.index', compact('orderLists'));
+        $transactions = Transaction::with('user', 'transactionDetails')->get();
+
+        return view('dashboard.order-list.index', compact('transactions'));
     }
 
     /**
