@@ -45,19 +45,20 @@
                                             id="button-addon1"><i class="fa fa-minus"></i></button>
                                     </div>
                                     <input type="number" class="form-control form-control-sm qty text-center cart-qty"
-                                        placeholder="" aria-label="Example text with button addon"
+                                        placeholder="" aria-label="Example text with button addon" id="qty"
                                         value="{{ $cart->quantity }}" aria-describedby="button-addon1"
-                                        data-id="{{ $cart->id }}" readonly>
+                                        data-id="{{ $cart->id }}">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-outline-secondary plus-qty" type="button"
                                             id="button-addon1"><i class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="col text-right align-items-center d-flex justify-content-end">
-                        <h4><b class="total-amount">{{ number_format($cart->total) }}</b></h4>
+                        <h4><b class="total-amount" data-id="{{ $cart->id }}">{{ number_format($cart->total) }}</b></h4>
                     </div>
                 </div>
                 @endforeach
@@ -81,4 +82,78 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.min-qty').click(function() {
+            var cartId = $(this).closest('.cart-item').find('.cart-qty').data('id');
+            var quantity = parseInt($(this).closest('.cart-item').find('.cart-qty').val());
+            if (quantity > 1) {
+                quantity--;
+                updateCartQuantity(cartId, quantity);
+            }
+        });
+
+        $('.plus-qty').click(function() {
+            var cartId = $(this).closest('.cart-item').find('.cart-qty').data('id');
+            var quantity = parseInt($(this).closest('.cart-item').find('.cart-qty').val());
+            quantity++;
+            updateCartQuantity(cartId, quantity);
+        });
+
+        $('.cart-qty').keyup(function() {
+            var cartId = $(this).data('id');
+            var quantity = parseInt($(this).val());
+            updateCartQuantity(cartId, quantity);
+        });
+
+        function number_format(number, decimals, decPoint, thousandsSep) {
+            number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+            var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep,
+                dec = (typeof decPoint === 'undefined') ? '.' : decPoint,
+                s = '',
+                toFixedFix = function(n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+            if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+            }
+            if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+            }
+            return s.join(dec);
+        }
+
+        function updateCartQuantity(cartId, quantity) {
+            if (quantity == null || quantity == 0) {
+                quantity = 0;
+            }
+            $.ajax({
+                url: `/cart/update/qty`,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    _method: "PUT",
+                    cart_id: cartId,
+                    quantity: quantity
+                },
+                success: function(response) {
+                    $(`input[data-id="${cartId}"]`).val(quantity);
+                    $(`b.total-amount[data-id="${cartId}"]`).text(number_format(response.total));
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    });
+</script>
 @endsection

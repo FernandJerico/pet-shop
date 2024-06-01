@@ -59,6 +59,25 @@ class TransactionController extends Controller
         return redirect()->back();
     }
 
+    public function updateQTY()
+    {
+        $data = request()->all();
+        $cart = Cart::find($data['cart_id']);
+        $inventory = Inventory::find($cart->inventory_id);
+
+        $total = $data['quantity'] * $inventory->price;
+
+        $cart->quantity = $data['quantity'];
+        $cart->total = $total;
+        $cart->save();
+
+        // json
+        return response()->json([
+            'total' => $total,
+            'qty' => $cart->quantity,
+        ]);
+    }
+
     public function checkout(Request $request)
     {
         $categories = Category::where('status', 'active')->get();

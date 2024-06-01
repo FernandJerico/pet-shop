@@ -88,6 +88,7 @@ Auth::routes();
 Route::middleware(['isAuth'])->group(function () {
     Route::get('cart', [App\Http\Controllers\User\TransactionController::class, 'cart'])->name('cart');
     Route::post('cart/add', [App\Http\Controllers\User\TransactionController::class, 'addToCart'])->name('cart.add');
+    Route::put('cart/update/qty', [App\Http\Controllers\User\TransactionController::class, 'updateQTY'])->name('cart.update.qty');
     Route::delete('cart/delete/{id}', [App\Http\Controllers\User\TransactionController::class, 'deleteCartByID'])->name('cart.delete.id');
     Route::delete('cart/delete', [App\Http\Controllers\User\TransactionController::class, 'deleteAllCart'])->name('cart.delete');
     Route::get('checkout', [App\Http\Controllers\User\TransactionController::class, 'checkout'])->name('checkout');
