@@ -87,6 +87,7 @@ Auth::routes();
 
 Route::middleware(['isAuth'])->group(function () {
     Route::get('cart', [App\Http\Controllers\User\TransactionController::class, 'cart'])->name('cart');
+    Route::post('cart/add', [App\Http\Controllers\User\TransactionController::class, 'addToCart'])->name('cart.add');
     Route::get('checkout', [App\Http\Controllers\User\TransactionController::class, 'checkout'])->name('checkout');
 });
 
