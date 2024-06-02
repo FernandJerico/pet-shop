@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignIdFor(User::class)->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('invoice_number');
             $table->text('delivery_address')->nullable();
             $table->string('payment_method');
             $table->double('amount');

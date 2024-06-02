@@ -4,37 +4,41 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
+
             <div class="col-md-6">
                 <img class="card-img-top mb-5 mb-md-0 " loading="lazy" id="display-img"
-                    src="{{ Storage::url($product->image) }}" alt="product" />
+                    src="{{ asset('storage/product/' . $product->images->first()->url) }}" alt="product" />
                 <div class="mt-2 row gx-2 gx-lg-3 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
-                    {{-- @foreach ($fileO as $k => $img)
-                    @if (!in_array($img, ['.', '..']))
-                    <a href="javascript:void(0)" class="view-image {{ $k == 2 ? 'active' : '' }}"><img
-                            src="{{ validate_image('uploads/product_' . $id . '/' . $img) }}" loading="lazy"
-                            class="img-thumbnail" alt=""></a>
-                    @endif
-                    @endforeach --}}
-                    <a href="javascript:void(0)" class="view-image"><img src="{{ Storage::url($product->image) }}"
-                            loading="lazy" class="img-thumbnail" alt=""></a>
+                    @foreach ($product->images as $image)
+                    <a href="javascript:void(0)" class="view-image"
+                        data-url="{{ asset('storage/product/' . $image->url) }}"><img
+                            src="{{ asset('storage/product/' . $image->url) }}" loading="lazy" class="img-thumbnail"
+                            alt=""></a>
+                    @endforeach
                 </div>
             </div>
+
             <div class="col-md-6">
-                @php
-                $inventory = App\Models\Inventory::where('product_id', $product->id)->get();
-                @endphp
                 <h1 class="display-5 fw-bolder">{{ $product->product_name }}</h1>
+                @if (isset($product->inventories) && $product->inventories->isNotEmpty())
                 <div class="fs-5 mb-5">
-                    &#8369; <span id="price">Rp {{ number_format($inventory->first()->price, 0, ',', '.') }}</span>
+                    &#8369; <span id="price">Rp {{ number_format($product->inventories->first()->price, 0, ',', '.')
+                        }}</span>
                     <br>
-                    <span><small><b>Available stock:</b> <span id="avail">{{ $inventory->first()->quantity
+                    <span><small><b>Available stock:</b> <span id="avail">{{ $product->inventories->first()->quantity
                                 }}</span></small></span>
                 </div>
+                @else
+                <div class="fs-5 mb-5">
+                    <h5>OUT OF STOCK</h5>
+                </div>
+                @endif
+
                 <div class="fs-5 mb-5 d-flex justify-content-start">
-                    @foreach ($inventory as $item)
+                    @foreach ($product->inventories as $inventory)
                     <span><button
                             class="btn btn-sm btn-flat btn-outline-dark m-2 p-size {{ $loop->first ? 'active' : '' }}"
-                            data-id="{{ $item->id }}">{{ $item->size }}</button></span>
+                            data-id="{{ $inventory->id }}">{{ $inventory->size }}</button></span>
                     @endforeach
                 </div>
                 <form action="{{ route('cart.add') }}" method="POST" id="add-cart">
@@ -43,8 +47,10 @@
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="inventory_id" value="" id="inventory">
                         <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
-                            style="max-width: 3rem" name="quantity" />
-                        <button class="btn btn-outline-dark flex-shrink-0" type="submit">
+                            style="max-width: 3rem" name="quantity" {{ $product->inventories->isEmpty() ? 'disabled' :
+                        '' }} />
+                        <button class="btn btn-outline-dark flex-shrink-0" type="submit" {{
+                            $product->inventories->isEmpty() ? 'disabled' : '' }}>
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
                         </button>
@@ -95,9 +101,19 @@
     </div>
 </section>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.view-image').click(function() {
+        var imageUrl = $(this).data('url');
+
+        $('#display-img').attr('src', imageUrl);
+        });
+    });
+</script>
 <script>
     function updatePriceAndStock(sizeId) {
-            const inventory = @json($inventory);
+            const inventory = @json($product->inventories);
 
             const selectedInventory = inventory.find(item => item.id == sizeId);
 
@@ -117,6 +133,6 @@
             });
         });
 
-        updatePriceAndStock({{ $inventory->first()->id }});
+        updatePriceAndStock({{ $product->inventories->first()->id ?? 0 }});
 </script>
 @endsection

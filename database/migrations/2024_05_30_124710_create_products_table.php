@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('product_name');
             $table->text('description');
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

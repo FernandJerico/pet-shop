@@ -20,4 +20,14 @@ class Product extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
 }

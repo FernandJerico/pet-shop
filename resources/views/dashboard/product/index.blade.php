@@ -40,10 +40,11 @@
                         <td>{{ $product->product_name }}</td>
                         <td>{!! $product->description !!}</td>
                         <td>
-                            @if ($product->image == null)
+                            @if ($product->images == null || $product->images->isEmpty())
                             <img src="{{ asset('assets/img/avatars/no-photo.png') }}" alt="no-photo" height="25">
                             @else
-                            <img src="{{ Storage::url($product->image) }}" alt="photo" height="25">
+                            <img src="{{ asset('storage/product/' . $product->images->first()->url) }}" alt="photo"
+                                height="25">
                             @endif
                         </td>
                         <td>
@@ -70,8 +71,8 @@
                                     <a class="dropdown-item" href="{{ route('admin.products.edit', $product->id) }}"><i
                                             class="bx bx-edit-alt me-1"></i> Edit</a>
                                     <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST">
-                                        <input type="hidden" name="_method" value="DELETE" />
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                        @csrf
+                                        @method('delete')
                                         <button type="submit" class="dropdown-item"><i class="bx bx-trash me-1"></i>
                                             Delete</button>
                                     </form>

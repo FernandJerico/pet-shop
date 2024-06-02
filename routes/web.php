@@ -27,7 +27,7 @@ Route::get('/', function (Request $request) {
 
 Route::get('/detail/{id}', function (Request $request, $id) {
     $categories = Category::where('status', 'active')->get();
-    $product = Product::find($id);
+    $product = Product::with('inventories')->find($id);
     $categoryId = $product->category_id;
     $relatedProducts = Product::where('category_id', $categoryId)
         ->where('id', '!=', $id)->inRandomOrder()->limit(4)->get();
@@ -85,6 +85,9 @@ Route::name('admin.')->prefix('admin')->group(function () {
             return view('dashboard.index');
         })->name('index');
         Route::resource('products', ProductController::class);
+        Route::post('/product/image/add/{id}', [App\Http\Controllers\Admin\ProductController::class, 'addImage'])->name('product.image.add');
+        Route::delete('/product/image/delete/{id}', [App\Http\Controllers\Admin\ProductController::class, 'deleteImage'])->name('product.image.delete');
+
         Route::resource('categories', CategoryController::class);
         Route::resource('sub-categories', SubCategoryController::class);
         Route::resource('inventories', InventoryController::class);

@@ -30,7 +30,9 @@
         <div class="col mb-5">
             <div class="card h-100 product-item">
                 <!-- Product image-->
-                <img class="card-img-top w-100" src="{{ Storage::url($product->image) }}" alt="..." />
+                <img class="card-img-top w-100"
+                    src="{{ $product->images->first() ? asset('storage/product/' . $product->images->first()->url) : asset('assets/img/illustrations/man-with-laptop-light.png') }}"
+                    alt="Product Image" />
                 <!-- Product details-->
                 <div class="card-body p-4">
                     <div class="text-center">
