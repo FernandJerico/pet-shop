@@ -21,8 +21,9 @@
                 <div class="col-md-6">
                     <h1 class="display-5 fw-bolder">{{ $product->product_name }}</h1>
                     @if (isset($product->inventories) && $product->inventories->isNotEmpty())
-                        <div class="fs-5 mb-5">
-                            &#8369; <span id="price">Rp
+                        <div class="mb-5">
+                            <img src="{{ asset('assets/img/icons/rp-symbol.png') }}" alt="rp" width="18px">.
+                            <span id="price">
                                 {{ number_format($product->inventories->first()->price, 0, ',', '.') }}</span>
                             <br>
                             <span><small><b>Available stock:</b> <span

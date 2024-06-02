@@ -76,7 +76,6 @@
                             @else
                                 <h4 id="grand-total">-</h4>
                             @endif
-
                         </div>
                     </div>
                 </div>
