@@ -1,6 +1,3 @@
-@php
-    $meta = App\Models\SystemInfo::pluck('meta_value', 'meta_field')->toArray();
-@endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="{{ route('admin.index') }}" class="app-brand-link">
