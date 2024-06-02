@@ -18,6 +18,7 @@
                     <tr>
                         <th>No</th>
                         <th>Date Created</th>
+                        <th>Code</th>
                         <th>Address</th>
                         <th>Product</th>
                         <th>Amount</th>
@@ -35,6 +36,7 @@
                                 }}</strong>
 
                         </td>
+                        <td>{{ $transaction->invoice_number }}</td>
                         <td>{{ $transaction->delivery_address }}</td>
                         <td>
                             @foreach ($transaction->transactionDetails as $detail)

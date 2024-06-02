@@ -102,8 +102,12 @@ class TransactionController extends Controller
             $payment_method = 'Whatsapp';
         }
 
+        // create invoice number using date
+        $invoice = 'TRX-' . date('ymd') . Auth::id() . rand(1000, 9999);
+
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
+            'invoice_number' => $invoice,
             'delivery_address' => $request->delivery_address,
             'payment_method' => $payment_method,
             'amount' => $grand_total,
@@ -129,7 +133,7 @@ class TransactionController extends Controller
         }
 
         if ($payment_method == 'Whatsapp') {
-            $message = "Hai, admin saya telah checkout barang dengan kode transaksi *{$transaction->id}* dengan total harga *Rp " .  number_format($grand_total) . "* terimakasih";
+            $message = "Hai, admin saya telah checkout barang dengan kode transaksi *{$transaction->invoice_number}* dengan total harga *Rp " .  number_format($grand_total) . "* terimakasih";
             $encodedMessage = urlencode($message);
             $phone = '6287789851335';
 
