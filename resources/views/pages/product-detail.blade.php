@@ -7,7 +7,8 @@
 
             <div class="col-md-6">
                 <img class="card-img-top mb-5 mb-md-0 " loading="lazy" id="display-img"
-                    src="{{ asset('storage/product/' . $product->images->first()->url) }}" alt="product" />
+                    src="{{ $product->images->first() ? asset('storage/product/' . $product->images->first()->url) : asset('assets/img/illustrations/man-with-laptop-light.png') }}"
+                    alt="product" />
                 <div class="mt-2 row gx-2 gx-lg-3 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
                     @foreach ($product->images as $image)
                     <a href="javascript:void(0)" class="view-image"
