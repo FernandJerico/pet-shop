@@ -128,6 +128,15 @@ class TransactionController extends Controller
             Cart::destroy($cart->id);
         }
 
+        if ($payment_method == 'Whatsapp') {
+            $message = "Hai, admin saya telah checkout barang dengan kode transaksi *{$transaction->id}* dengan total harga *Rp " .  number_format($grand_total) . "* terimakasih";
+            $encodedMessage = urlencode($message);
+            $phone = '6287789851335';
+
+            $link = "https://wa.me/{$phone}?text={$encodedMessage}";
+            return redirect()->to($link);
+        }
+
         return redirect()->route('index')->with('success', 'Checkout successfully.');
     }
 }

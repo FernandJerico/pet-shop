@@ -9,9 +9,6 @@
                 <hr class="border-dark">
                 <form action="{{ route('checkout') }}" id="place_order" method="POST">
                     @csrf
-                    <input type="hidden" name="amount" value="">
-                    <input type="hidden" name="payment_method" value="cod">
-                    <input type="hidden" name="paid" value="0">
                     <div class="row row-col-1 justify-content-center">
                         <div class="col-6">
                             <div class="form-group col">
