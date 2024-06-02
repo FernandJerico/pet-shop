@@ -85,6 +85,9 @@ Route::name('admin.')->prefix('admin')->group(function () {
             return view('dashboard.index');
         })->name('index');
         Route::resource('products', ProductController::class);
+        Route::post('/product/image/add/{id}', [App\Http\Controllers\Admin\ProductController::class, 'addImage'])->name('product.image.add');
+        Route::delete('/product/image/delete/{id}', [App\Http\Controllers\Admin\ProductController::class, 'deleteImage'])->name('product.image.delete');
+
         Route::resource('categories', CategoryController::class);
         Route::resource('sub-categories', SubCategoryController::class);
         Route::resource('inventories', InventoryController::class);

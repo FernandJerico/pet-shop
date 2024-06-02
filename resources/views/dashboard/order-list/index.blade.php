@@ -85,7 +85,8 @@
                                         method="POST">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" class="dropdown-item"><i class="bx bx-trash me-1"></i>
+                                        <button type="submit" class="dropdown-item"><i class="bx bx-trash me-1"
+                                                onclick="return confirm('Are you sure?')"></i>
                                             Delete</button>
                                     </form>
                                 </div>

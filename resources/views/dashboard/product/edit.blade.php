@@ -28,13 +28,14 @@
                                         <img src="{{ asset('storage/product/' . $image->url) }}" class="d-block w-100"
                                             alt="Product Image">
                                         <div class="carousel-caption d-none d-md-block">
-                                            <form method="POST" action="#">
+                                            <form method="POST"
+                                                action="{{ route('admin.product.image.delete', $image->id) }}">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit"
-                                                    class="btn btn-danger shadow btn-xs sharp show_confirm"
-                                                    data-toggle="tooltip" title='Delete'>
-                                                    <i data-feather="trash"></i>
+                                                <button type="submit" class="btn btn-danger shadow btn-xs sharp"
+                                                    data-toggle="tooltip" title='Delete'
+                                                    onclick="return confirm('Are you sure?')">
+                                                    <i class="bx bx-trash m-1"></i>
                                                 </button>
                                             </form>
                                         </div>
@@ -55,7 +56,11 @@
                             @else
                             <p>Image Not Found</p>
                             @endif
-                            <form action="#" class="mt-3" method="POST" enctype="multipart/form-data">
+
+                        </div>
+                        <div class="col-md-6">
+                            <form action="{{ route('admin.product.image.add', $product->id) }}" class="mt-3"
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="container">
@@ -156,9 +161,35 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener("trix-file-accept", function(e) {
             e.preventDefault()
         })
+</script>
+<script type="text/javascript">
+    ;(function($){
+        function readURL(input) {
+            var $prev = $('#preview-image');
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $prev.attr('src', e.target.result);
+                    }
+
+                reader.readAsDataURL(input.files[0]);
+
+                $prev.attr('class', 'mt-2');
+            } else {
+                $prev.attr('class', 'visually-hidden');
+            }
+        }
+
+        $('#image').on('change',function(){
+            readURL(this);
+        });
+    })(jQuery);
 </script>
 @endsection

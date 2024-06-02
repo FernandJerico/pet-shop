@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\SubCategory;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -126,5 +127,41 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    public function addImage(Request $request, string $id)
+    {
+        $request->validate([
+            'image' => 'required|mimes:png,jpg,jpeg|max:5048'
+        ]);
+        try {
+            if ($request->file('image') !== null) {
+                $image = $request->file('image');
+                $image->storeAs('public/product', $image->hashName());
+
+                ProductImage::create([
+                    'user_id' => auth()->id(),
+                    'product_id' => $id,
+                    'url' => $image->hashName()
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Foto berhasil ditambahkan!!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Foto Gagal ditambahkan!!');
+        }
+    }
+
+    public function deleteImage(string $id)
+    {
+        try {
+            $image = ProductImage::findOrFail($id);
+            unlink("storage/product/" . $image->url);
+            $image->delete();
+
+            return redirect()->back()->with('success', 'Gambar berhasil dihapus!!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gambar gagal dihapus!!');
+        }
     }
 }
