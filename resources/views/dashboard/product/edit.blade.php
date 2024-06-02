@@ -9,6 +9,70 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Edit Image</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            @if (isset($product->images) && $product->images->isNotEmpty())
+                            <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    @foreach ($product->images as $image)
+                                    <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ $loop->index }}"
+                                        class="{{ $loop->first ? 'active' : '' }}"></li>
+                                    @endforeach
+                                </ol>
+                                <div class="carousel-inner">
+                                    @foreach ($product->images as $image)
+                                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                        <img src="{{ asset('storage/product/' . $image->url) }}" class="d-block w-100"
+                                            alt="Product Image">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <form method="POST" action="#">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit"
+                                                    class="btn btn-danger shadow btn-xs sharp show_confirm"
+                                                    data-toggle="tooltip" title='Delete'>
+                                                    <i data-feather="trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a>
+                            </div>
+                            @else
+                            <p>Image Not Found</p>
+                            @endif
+                            <form action="#" class="mt-3" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="container">
+                                        <input type="file" name="image" id="image" class="form-control">
+                                        <img id="preview-image" src="#" width="50%" class="visually-hidden">
+                                        <button type="submit" class="btn icon icon-left btn-primary mt-2">
+                                            <i data-feather="plus"></i> Tambah Foto
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Edit Product</h5>
                 </div>
                 <div class="card-body">
@@ -73,27 +137,16 @@
                             <label class="form-label">Status</label>
                             <div class="selectgroup w-100">
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="status" value="active" class="selectgroup-input" @if
-                                        ($product->status == 'active') checked @endif>
+                                    <input type="radio" name="status" value="active" class="selectgroup-input" {{
+                                        $product->status == 'active' ? 'checked' : '' }}>
                                     <span class="selectgroup-button">Active</span>
                                 </label>
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="status" value="inactive" class="selectgroup-input" @if
-                                        ($product->status == 'inactive') checked @endif>
+                                    <input type="radio" name="status" value="inactive" class="selectgroup-input" {{
+                                        $product->status == 'inactive' ? 'checked' : '' }}>
                                     <span class="selectgroup-button">Not Active</span>
                                 </label>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Image</label>
-                            @if ($product->image)
-                            <p>Current Image: {{ $product->image }}</p>
-                            @endif
-                            <input class="form-control @error('image') is-invalid @enderror" type="file" id="image"
-                                name="image">
-                            @error('image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                         <button type="submit" class="btn btn-primary">Edit</button>
                     </form>

@@ -1,6 +1,20 @@
 @extends('dashboard.layouts.admin')
 
 @section('content-section')
+@if ($errors->any())
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <h4 class="alert-heading">There's something wrong!</h4>
+    <hr>
+    <p>
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+    </p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Product/</span> Create</h4>
 
@@ -75,10 +89,10 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="image" class="form-label">Image</label>
-                            <input class="form-control @error('image') is-invalid @enderror" type="file" id="image"
-                                name="image">
-                            @error('image')
+                            <label for="images" class="form-label">Image</label>
+                            <input type="file" class="form-control @error('images') is-invalid @enderror" multiple
+                                name="images[]">
+                            @error('images')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

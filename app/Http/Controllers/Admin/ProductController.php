@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -43,15 +44,22 @@ class ProductController extends Controller
             'product_name' => 'required',
             'description' => 'required',
             'status' => 'required|in:active,inactive',
-            'image' => 'required|image|max:2048',
+            'images' => 'required',
+            'images.*' => 'mimes:png,jpg,jpeg|max:5048'
         ]);
 
-        //store images
-        if ($request->file('image')) {
-            $validatedData['image'] = $request->file('image')->storeAs('public/product-image', $validatedData['product_name'] . '.' . $request->file('image')->getClientOriginalExtension());
+        $validatedData['image'] = $request->images[0]->hashName();
+        $product = Product::create($validatedData);
+
+        foreach ($request->file('images') as $image) {
+            $image->storeAs('public/product', $image->hashName());
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'url' => $image->hashName()
+            ]);
         }
 
-        Product::create($validatedData);
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
@@ -69,7 +77,7 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         //edit
-        $product = Product::findOrFail($id);
+        $product = Product::with('images')->findOrFail($id);
         $categories = Category::with('subCategories')->get();
         return view('dashboard.product.edit', compact('product', 'categories'));
     }

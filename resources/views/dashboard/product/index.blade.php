@@ -43,7 +43,7 @@
                             @if ($product->image == null)
                             <img src="{{ asset('assets/img/avatars/no-photo.png') }}" alt="no-photo" height="25">
                             @else
-                            <img src="{{ Storage::url($product->image) }}" alt="photo" height="25">
+                            <img src="{{ asset('storage/product/' . $product->image) }}" alt="photo" height="25">
                             @endif
                         </td>
                         <td>
