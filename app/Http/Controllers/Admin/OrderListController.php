@@ -78,6 +78,13 @@ class OrderListController extends Controller
     public function update(Request $request, string $id)
     {
         $transaction = Transaction::findOrFail($id);
+        if ($request->status == 'cancel') {
+            foreach ($transaction->transactionDetails as $detail) {
+                $inventory = $detail->inventory;
+                $inventory->quantity += $detail->quantity;
+                $inventory->save();
+            }
+        }
         $transaction->update([
             'status' => $request->status
         ]);

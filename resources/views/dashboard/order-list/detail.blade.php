@@ -79,13 +79,6 @@
                         <button type="submit" class="btn btn-danger text-white btn-sm" name="status" value="cancel">
                             Cancel
                         </button>
-                        @else
-                        <button type="submit" class="btn btn-warning text-white btn-sm" name="status" value="pending">
-                            Pending
-                        </button>
-                        <button type="submit" class="btn btn-primary text-white btn-sm" name="status" value="success">
-                            Success
-                        </button>
                         @endif
                     </form>
 
