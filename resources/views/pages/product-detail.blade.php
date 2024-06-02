@@ -20,21 +20,26 @@
                 </div>
             </div>
             <div class="col-md-6">
-                @php
-                $inventory = App\Models\Inventory::where('product_id', $product->id)->get();
-                @endphp
                 <h1 class="display-5 fw-bolder">{{ $product->product_name }}</h1>
+                @if (isset($product->inventories) && $product->inventories->isNotEmpty())
                 <div class="fs-5 mb-5">
-                    &#8369; <span id="price">Rp {{ number_format($inventory->first()->price, 0, ',', '.') }}</span>
+                    &#8369; <span id="price">Rp {{ number_format($product->inventories->first()->price, 0, ',', '.')
+                        }}</span>
                     <br>
-                    <span><small><b>Available stock:</b> <span id="avail">{{ $inventory->first()->quantity
+                    <span><small><b>Available stock:</b> <span id="avail">{{ $product->inventories->first()->quantity
                                 }}</span></small></span>
                 </div>
+                @else
+                <div class="fs-5 mb-5">
+                    <h5>OUT OF STOCK</h5>
+                </div>
+                @endif
+
                 <div class="fs-5 mb-5 d-flex justify-content-start">
-                    @foreach ($inventory as $item)
+                    @foreach ($product->inventories as $inventory)
                     <span><button
                             class="btn btn-sm btn-flat btn-outline-dark m-2 p-size {{ $loop->first ? 'active' : '' }}"
-                            data-id="{{ $item->id }}">{{ $item->size }}</button></span>
+                            data-id="{{ $inventory->id }}">{{ $inventory->size }}</button></span>
                     @endforeach
                 </div>
                 <form action="{{ route('cart.add') }}" method="POST" id="add-cart">
@@ -43,8 +48,10 @@
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="inventory_id" value="" id="inventory">
                         <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
-                            style="max-width: 3rem" name="quantity" />
-                        <button class="btn btn-outline-dark flex-shrink-0" type="submit">
+                            style="max-width: 3rem" name="quantity" {{ $product->inventories->isEmpty() ? 'disabled' :
+                        '' }} />
+                        <button class="btn btn-outline-dark flex-shrink-0" type="submit" {{
+                            $product->inventories->isEmpty() ? 'disabled' : '' }}>
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
                         </button>
@@ -97,7 +104,7 @@
 
 <script>
     function updatePriceAndStock(sizeId) {
-            const inventory = @json($inventory);
+            const inventory = @json($product->inventories);
 
             const selectedInventory = inventory.find(item => item.id == sizeId);
 
@@ -117,6 +124,6 @@
             });
         });
 
-        updatePriceAndStock({{ $inventory->first()->id }});
+        updatePriceAndStock({{ $product->inventories->first()->id ?? 0 }});
 </script>
 @endsection

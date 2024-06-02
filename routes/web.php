@@ -27,7 +27,7 @@ Route::get('/', function (Request $request) {
 
 Route::get('/detail/{id}', function (Request $request, $id) {
     $categories = Category::where('status', 'active')->get();
-    $product = Product::find($id);
+    $product = Product::with('inventories')->find($id);
     $categoryId = $product->category_id;
     $relatedProducts = Product::where('category_id', $categoryId)
         ->where('id', '!=', $id)->inRandomOrder()->limit(4)->get();
