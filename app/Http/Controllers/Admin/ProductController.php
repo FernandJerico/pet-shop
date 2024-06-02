@@ -49,7 +49,6 @@ class ProductController extends Controller
             'images.*' => 'mimes:png,jpg,jpeg|max:5048'
         ]);
 
-        $validatedData['image'] = $request->images[0]->hashName();
         $product = Product::create($validatedData);
 
         foreach ($request->file('images') as $image) {
