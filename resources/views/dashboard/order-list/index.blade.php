@@ -12,11 +12,6 @@
     <!-- Basic Bootstrap Table -->
     <div class="card">
         <h5 class="card-header">Order List</h5>
-        <div class="demo-inline-spacing px-3">
-            <a href="{{ route('admin.inventories.create') }}" type="button" class="btn btn-primary text-white">
-                <span class="tf-icons bx bx-plus"></span> Create Order
-            </a>
-        </div>
         <div class="table-responsive text-nowrap p-3">
             <table class="table" id="datatables">
                 <thead>
@@ -52,19 +47,19 @@
                         </td>
                         <td>Rp {{ number_format($transaction->amount) }}</td>
                         <td>
+                            @if ($transaction->paid == 0)
+                            <span class="badge bg-label-dark me-1">no</span>
+                            @else
+                            <span class="badge bg-label-primary me-1">yes</span>
+                            @endif
+                        </td>
+                        <td>
                             @if ($transaction->status == 'pending')
                             <span class="badge bg-label-warning me-1">pending</span>
                             @elseif ($transaction->status == 'success')
                             <span class="badge bg-label-primary me-1">success</span>
                             @else
                             <span class="badge bg-label-danger me-1">cancel</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if ($transaction->paid == 0)
-                            <span class="badge bg-label-dark me-1">no</span>
-                            @else
-                            <span class="badge bg-label-primary me-1">yes</span>
                             @endif
                         </td>
                         <td>
@@ -75,8 +70,8 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item"
-                                        href="{{ route('admin.order-list.edit', $transaction->id) }}"><i
-                                            class="bx bx-edit-alt me-1"></i> Edit</a>
+                                        href="{{ route('admin.order-list.show', $transaction->id) }}"><i
+                                            class="bx bx-edit-alt me-1"></i> View Order</a>
                                     <form action="{{ route('admin.order-list.update-paid', $transaction->id) }}"
                                         method="POST">
                                         @csrf
@@ -88,8 +83,8 @@
                                     </form>
                                     <form action="{{ route('admin.order-list.destroy', $transaction->id) }}"
                                         method="POST">
-                                        <input type="hidden" name="_method" value="DELETE" />
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                        @csrf
+                                        @method('delete')
                                         <button type="submit" class="dropdown-item"><i class="bx bx-trash me-1"></i>
                                             Delete</button>
                                     </form>
