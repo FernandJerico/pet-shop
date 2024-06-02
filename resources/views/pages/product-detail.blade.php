@@ -4,21 +4,20 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
+
             <div class="col-md-6">
                 <img class="card-img-top mb-5 mb-md-0 " loading="lazy" id="display-img"
-                    src="{{ Storage::url($product->image) }}" alt="product" />
+                    src="{{ asset('storage/product/' . $product->images->first()->url) }}" alt="product" />
                 <div class="mt-2 row gx-2 gx-lg-3 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
-                    {{-- @foreach ($fileO as $k => $img)
-                    @if (!in_array($img, ['.', '..']))
-                    <a href="javascript:void(0)" class="view-image {{ $k == 2 ? 'active' : '' }}"><img
-                            src="{{ validate_image('uploads/product_' . $id . '/' . $img) }}" loading="lazy"
-                            class="img-thumbnail" alt=""></a>
-                    @endif
-                    @endforeach --}}
-                    <a href="javascript:void(0)" class="view-image"><img src="{{ Storage::url($product->image) }}"
-                            loading="lazy" class="img-thumbnail" alt=""></a>
+                    @foreach ($product->images as $image)
+                    <a href="javascript:void(0)" class="view-image"
+                        data-url="{{ asset('storage/product/' . $image->url) }}"><img
+                            src="{{ asset('storage/product/' . $image->url) }}" loading="lazy" class="img-thumbnail"
+                            alt=""></a>
+                    @endforeach
                 </div>
             </div>
+
             <div class="col-md-6">
                 <h1 class="display-5 fw-bolder">{{ $product->product_name }}</h1>
                 @if (isset($product->inventories) && $product->inventories->isNotEmpty())
@@ -102,6 +101,16 @@
     </div>
 </section>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.view-image').click(function() {
+        var imageUrl = $(this).data('url');
+
+        $('#display-img').attr('src', imageUrl);
+        });
+    });
+</script>
 <script>
     function updatePriceAndStock(sizeId) {
             const inventory = @json($product->inventories);

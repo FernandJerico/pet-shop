@@ -31,8 +31,8 @@
                             </button>
                         </form>
 
-                        <img src="{{ Storage::url($cart->product->image) }}" loading="lazy"
-                            class="cart-prod-img mr-2 mr-sm-2 border" alt="">
+                        <img src="{{ asset('storage/product/' . $cart->product->images->first()->url) }}" loading="lazy"
+                            class="cart-prod-img mr-2 mr-sm-2" alt="">
                         <div>
                             <p class="mb-1 mb-sm-1">{{ $cart->product->product_name }}</p>
                             <p class="mb-1 mb-sm-1"><small><b>Size:</b> {{ $cart->inventory->size }}</small></p>
