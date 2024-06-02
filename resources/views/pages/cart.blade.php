@@ -32,7 +32,7 @@
                                     </button>
                                 </form>
 
-                                <img src="{{ asset('storage/product/' . $cart->product->images->first()->url) }}"
+                                <img src="{{ $cart->product->images->first() ? asset('storage/product/' . $cart->product->images->first()->url) : asset('assets/img/illustrations/man-with-laptop-light.png') }}"
                                     loading="lazy" class="cart-prod-img mr-2 mr-sm-2" alt="">
                                 <div>
                                     <p class="mb-1 mb-sm-1">{{ $cart->product->product_name }}</p>
@@ -76,6 +76,7 @@
                             @else
                                 <h4 id="grand-total">-</h4>
                             @endif
+
                         </div>
                     </div>
                 </div>
@@ -138,7 +139,7 @@
                     quantity = 0;
                 }
                 $.ajax({
-                    url: `/cart/update/qty`,
+                    url: /cart/update / qty,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -149,8 +150,16 @@
                         quantity: quantity
                     },
                     success: function(response) {
-                        $(`input[data-id="${cartId}"]`).val(quantity);
-                        $(`b.total-amount[data-id="${cartId}"]`).text(number_format(response.total));
+                        $(input[data - id = "${cartId}"]).val(quantity);
+                        $(b.total - amount[data - id = "${cartId}"]).text(number_format(response
+                            .total));
+
+                        var total = 0;
+                        $('.total-amount').each(function() {
+                            total += parseInt($(this).text().replace(/,/g, ''));
+                        });
+
+                        $('#grand-total').text(number_format(total));
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
