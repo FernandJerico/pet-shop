@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderList;
+use App\Models\Transaction;
+use Exception;
 use Illuminate\Http\Request;
 
 class OrderListController extends Controller
@@ -14,8 +16,9 @@ class OrderListController extends Controller
     public function index()
     {
         //index
-        $orderLists = OrderList::all();
-        return view('dashboard.order-list.index', compact('orderLists'));
+        $transactions = Transaction::with('user', 'transactionDetails')->get();
+
+        return view('dashboard.order-list.index', compact('transactions'));
     }
 
     /**
@@ -53,7 +56,10 @@ class OrderListController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $transaction = Transaction::with('user', 'transactionDetails')->findOrFail($id);
+        $details = $transaction->transactionDetails;
+
+        return view('dashboard.order-list.detail', compact('transaction', 'details'));
     }
 
     /**
@@ -71,20 +77,19 @@ class OrderListController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //update
-        $validatedData = $request->validate([
-            'order_id' => 'required|exists:orders,id',
-            'product_id' => 'required',
-            'size' => 'required',
-            'unit' => 'required',
-            'quantity' => 'required',
-            'price' => 'required',
-            'total' => 'required',
+        $transaction = Transaction::findOrFail($id);
+        if ($request->status == 'cancel') {
+            foreach ($transaction->transactionDetails as $detail) {
+                $inventory = $detail->inventory;
+                $inventory->quantity += $detail->quantity;
+                $inventory->save();
+            }
+        }
+        $transaction->update([
+            'status' => $request->status
         ]);
 
-        OrderList::findOrFail($id)->update($validatedData);
-
-        return redirect()->route('admin.order-list.index')->with('success', 'Order list updated successfully.');
+        return redirect()->back()->with('success', 'Status order updated successfully.');
     }
 
     /**
@@ -92,9 +97,22 @@ class OrderListController extends Controller
      */
     public function destroy(string $id)
     {
-        //destroy
-        OrderList::findOrFail($id)->delete();
+        try {
+            $orderList = Transaction::findOrFail($id);
 
-        return redirect()->route('admin.order-list.index')->with('success', 'Order list deleted successfully.');
+            $orderList->delete();
+
+            return redirect()->route('admin.order-list.index')->with('success', 'Order list deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->route('admin.order-list.index')->with('error', 'Order list Gagal dihapus!!');
+        }
+    }
+
+    public function markAsPaid(string $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->update(['paid' => 1]);
+
+        return redirect()->route('admin.order-list.index')->with('success', 'Order list marked as paid.');
     }
 }

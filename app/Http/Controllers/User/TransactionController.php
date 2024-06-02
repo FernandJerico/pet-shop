@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Inventory;
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -78,10 +80,63 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function checkout(Request $request)
+    public function checkoutPreview(Request $request)
     {
         $categories = Category::where('status', 'active')->get();
         $search = $request->input('search', '');
-        return view('pages.checkout', compact('categories', 'search'));
+
+        $carts = Cart::where('user_id', Auth::id())->get();
+        $grand_total = $carts->sum('total');
+
+        return view('pages.checkout', compact('categories', 'search', 'grand_total'));
+    }
+
+    public function checkout(Request $request)
+    {
+        $carts = Cart::where('user_id', Auth::id())->get();
+        $grand_total = $carts->sum('total');
+
+        if (isset($request->cod)) {
+            $payment_method = 'Cash on Delivery';
+        } else {
+            $payment_method = 'Whatsapp';
+        }
+
+        $transaction = Transaction::create([
+            'user_id' => Auth::id(),
+            'delivery_address' => $request->delivery_address,
+            'payment_method' => $payment_method,
+            'amount' => $grand_total,
+            'status' => 'pending',
+            'paid' => 0,
+        ]);
+
+        foreach ($carts as $cart) {
+            TransactionDetail::create([
+                'transaction_id' => $transaction->id,
+                'product_id' => $cart->product_id,
+                'user_id' => Auth::id(),
+                'inventory_id' => $cart->inventory_id,
+                'quantity' => $cart->quantity,
+                'total' => $cart->total,
+            ]);
+
+            $inventory = Inventory::find($cart->inventory_id);
+            $inventory->quantity -= $cart->quantity;
+            $inventory->save();
+
+            Cart::destroy($cart->id);
+        }
+
+        if ($payment_method == 'Whatsapp') {
+            $message = "Hai, admin saya telah checkout barang dengan kode transaksi *{$transaction->id}* dengan total harga *Rp " .  number_format($grand_total) . "* terimakasih";
+            $encodedMessage = urlencode($message);
+            $phone = '6287789851335';
+
+            $link = "https://wa.me/{$phone}?text={$encodedMessage}";
+            return redirect()->to($link);
+        }
+
+        return redirect()->route('index')->with('success', 'Checkout successfully.');
     }
 }
