@@ -67,6 +67,12 @@ Route::get('/category/{category}/subcategory/{subcategory}', function (Request $
     return view('pages.product', compact('categories', 'category', 'subcategory', 'products', 'inventory', 'search'));
 })->name('subcategory.products');
 
+Route::get('/about', function (Request $request) {
+    $search = $request->input('search', '');
+    $categories = Category::where('status', 'active')->with('subcategories')->get();
+    return view('pages.about', compact('search', 'categories'));
+})->name('about');
+
 Auth::routes();
 
 Route::middleware(['isAuth'])->group(function () {
