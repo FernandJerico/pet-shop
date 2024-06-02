@@ -29,7 +29,7 @@ Route::get('/detail/{id}', function (Request $request, $id) {
     $categories = Category::where('status', 'active')->get();
     $product = Product::with('inventories')->find($id);
     $categoryId = $product->category_id;
-    $relatedProducts = Product::where('category_id', $categoryId)
+    $relatedProducts = Product::with('inventories')->where('category_id', $categoryId)
         ->where('id', '!=', $id)->inRandomOrder()->limit(4)->get();
 
     $search = $request->input('search', '');
@@ -67,6 +67,12 @@ Route::get('/category/{category}/subcategory/{subcategory}', function (Request $
     return view('pages.product', compact('categories', 'category', 'subcategory', 'products', 'inventory', 'search'));
 })->name('subcategory.products');
 
+Route::get('/about', function (Request $request) {
+    $search = $request->input('search', '');
+    $categories = Category::where('status', 'active')->with('subcategories')->get();
+    return view('pages.about', compact('search', 'categories'));
+})->name('about');
+
 Auth::routes();
 
 Route::middleware(['isAuth'])->group(function () {
@@ -82,11 +88,12 @@ Route::middleware(['isAuth'])->group(function () {
 Route::name('admin.')->prefix('admin')->group(function () {
     Route::middleware(['isAdmin'])->group(function () {
         Route::get('/', function () {
-            return view('dashboard.index');
+            $products = Product::with('images')->where('status', 'active')->get();
+            return view('dashboard.index', compact('products'));
         })->name('index');
         Route::resource('products', ProductController::class);
-        Route::post('/product/image/add/{id}', [App\Http\Controllers\Admin\ProductController::class, 'addImage'])->name('product.image.add');
-        Route::delete('/product/image/delete/{id}', [App\Http\Controllers\Admin\ProductController::class, 'deleteImage'])->name('product.image.delete');
+        Route::post('/product/image/add/{id}', [ProductController::class, 'addImage'])->name('product.image.add');
+        Route::delete('/product/image/delete/{id}', [ProductController::class, 'deleteImage'])->name('product.image.delete');
 
         Route::resource('categories', CategoryController::class);
         Route::resource('sub-categories', SubCategoryController::class);
