@@ -15,9 +15,11 @@
     <div class="container px-4 px-lg-5 mt-5">
         @if ($products->isEmpty())
             <div class="row gx-4 gx-lg-5 justify-content-center p-5">
-                <div class="col-md-8 p-5">
-                    <div class="alert alert-warning text-center" role="alert">
-                        Data tidak ditemukan
+                <div class="col-md-8 py-5">
+                    <div class="py-5">
+                        <div class="alert-warning text-center py-3" role="alert">
+                            Data tidak ditemukan
+                        </div>
                     </div>
                 </div>
             </div>
