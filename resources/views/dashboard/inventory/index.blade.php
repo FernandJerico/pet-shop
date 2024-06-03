@@ -13,7 +13,7 @@
         <div class="card">
             <h5 class="card-header">Inventory List</h5>
             <div class="demo-inline-spacing px-3">
-                <a href="{{ route('inventories.create') }}" type="button" class="btn btn-primary text-white">
+                <a href="{{ route('admin.inventories.create') }}" type="button" class="btn btn-primary text-white">
                     <span class="tf-icons bx bx-plus"></span> Create Inventory
                 </a>
             </div>
@@ -36,7 +36,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                    <strong>{{ $inventory->created_at }}</strong>
+                                    <strong>{{ $inventory->created_at->format('d M Y') }}</strong>
                                 </td>
                                 <td>{{ $inventory->product->product_name }}</td>
                                 <td>{{ $inventory->quantity }}</td>
@@ -51,9 +51,9 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item"
-                                                href="{{ route('inventories.edit', $inventory->id) }}"><i
+                                                href="{{ route('admin.inventories.edit', $inventory->id) }}"><i
                                                     class="bx bx-edit-alt me-1"></i> Edit</a>
-                                            <form action="{{ route('inventories.destroy', $inventory->id) }}"
+                                            <form action="{{ route('admin.inventories.destroy', $inventory->id) }}"
                                                 method="POST">
                                                 <input type="hidden" name="_method" value="DELETE" />
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />

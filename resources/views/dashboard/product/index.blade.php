@@ -13,7 +13,7 @@
         <div class="card">
             <h5 class="card-header">Product List</h5>
             <div class="demo-inline-spacing px-3">
-                <a href="{{ route('products.create') }}" type="button" class="btn btn-primary text-white">
+                <a href="{{ route('admin.products.create') }}" type="button" class="btn btn-primary text-white">
                     <span class="tf-icons bx bx-plus"></span> Create Product
                 </a>
             </div>
@@ -31,34 +31,35 @@
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        {{-- @foreach ($users as $user)
+                        @foreach ($products as $product)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                    <strong>{{ $user->name }}</strong>
+                                    <strong>{{ $product->created_at->format('d M Y') }}</strong>
                                 </td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->phone }}</td>
+                                <td>{{ $product->product_name }}</td>
+                                <td>{!! $product->description !!}</td>
                                 <td>
-                                    @switch($user->role)
-                                        @case('staff')
-                                            <span class="badge bg-label-primary me-1">{{ $user->role }}</span>
+                                    @if ($product->images == null || $product->images->isEmpty())
+                                        <img src="{{ asset('assets/img/avatars/no-photo.png') }}" alt="no-photo"
+                                            height="25">
+                                    @else
+                                        <img src="{{ asset('storage/product/' . $product->images->first()->url) }}"
+                                            alt="photo" height="25">
+                                    @endif
+                                </td>
+                                <td>
+                                    @switch($product->status)
+                                        @case('active')
+                                            <span class="badge bg-label-success me-1">{{ $product->status }}</span>
                                         @break
 
-                                        @case('admin')
-                                            <span class="badge bg-label-info me-1">{{ $user->role }}</span>
-                                        @break
-
-                                        @case('doctor')
-                                            <span class="badge bg-label-success me-1">{{ $user->role }}</span>
-                                        @break
-
-                                        @case('patient')
-                                            <span class="badge bg-label-danger me-1">{{ $user->role }}</span>
+                                        @case('inactive')
+                                            <span class="badge bg-label-danger me-1">{{ $product->status }}</span>
                                         @break
 
                                         @default
-                                            <span class="badge bg-label-default me-1">{{ $user->role }}</span>
+                                            <span class="badge bg-label-default me-1">{{ $product->status }}</span>
                                     @endswitch
                                 </td>
                                 <td>
@@ -68,11 +69,13 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ route('manage-users.edit', $user->id) }}"><i
+                                            <a class="dropdown-item"
+                                                href="{{ route('admin.products.edit', $product->id) }}"><i
                                                     class="bx bx-edit-alt me-1"></i> Edit</a>
-                                            <form action="{{ route('manage-users.destroy', $user->id) }}" method="POST">
-                                                <input type="hidden" name="_method" value="DELETE" />
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                            <form action="{{ route('admin.products.destroy', $product->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('delete')
                                                 <button type="submit" class="dropdown-item"><i
                                                         class="bx bx-trash me-1"></i>
                                                     Delete</button>
@@ -81,7 +84,7 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
             </div>

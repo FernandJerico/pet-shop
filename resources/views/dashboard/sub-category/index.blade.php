@@ -13,7 +13,7 @@
         <div class="card">
             <h5 class="card-header">Sub Category List</h5>
             <div class="demo-inline-spacing px-3">
-                <a href="{{ route('sub-categories.create') }}" type="button" class="btn btn-primary text-white">
+                <a href="{{ route('admin.sub-categories.create') }}" type="button" class="btn btn-primary text-white">
                     <span class="tf-icons bx bx-plus"></span> Create Sub Category
                 </a>
             </div>
@@ -35,7 +35,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                    <strong>{{ $subcategory->created_at }}</strong>
+                                    <strong>{{ $subcategory->created_at->format('d M Y') }}</strong>
                                 </td>
                                 <td>{{ $subcategory->category->name }}</td>
                                 <td>{{ $subcategory->name }}</td>
@@ -62,9 +62,9 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item"
-                                                href="{{ route('sub-categories.edit', $subcategory->id) }}"><i
+                                                href="{{ route('admin.sub-categories.edit', $subcategory->id) }}"><i
                                                     class="bx bx-edit-alt me-1"></i> Edit</a>
-                                            <form action="{{ route('sub-categories.destroy', $subcategory->id) }}"
+                                            <form action="{{ route('admin.sub-categories.destroy', $subcategory->id) }}"
                                                 method="POST">
                                                 <input type="hidden" name="_method" value="DELETE" />
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />

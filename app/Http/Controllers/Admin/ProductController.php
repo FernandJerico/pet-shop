@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\SubCategory;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -26,7 +29,7 @@ class ProductController extends Controller
     public function create()
     {
         //create
-        $categories = Category::all();
+        $categories = Category::with('subCategories')->get();
         return view('dashboard.product.create', compact('categories'));
     }
 
@@ -38,14 +41,26 @@ class ProductController extends Controller
         //store
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:sub_categories,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
             'product_name' => 'required',
             'description' => 'required',
             'status' => 'required|in:active,inactive',
+            'images' => 'required',
+            'images.*' => 'mimes:png,jpg,jpeg|max:5048'
         ]);
 
-        Product::create($validatedData);
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        $product = Product::create($validatedData);
+
+        foreach ($request->file('images') as $image) {
+            $image->storeAs('public/product', $image->hashName());
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'url' => $image->hashName()
+            ]);
+        }
+
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -62,14 +77,15 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         //edit
-        $product = Product::findOrFail($id);
-        return view('dashboard.product.edit', compact('product'));
+        $product = Product::with('images')->findOrFail($id);
+        $categories = Category::with('subCategories')->get();
+        return view('dashboard.product.edit', compact('product', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
         //update
         $validatedData = $request->validate([
@@ -78,11 +94,22 @@ class ProductController extends Controller
             'product_name' => 'required',
             'description' => 'required',
             'status' => 'required|in:active,inactive',
+            'image' => 'image|max:2048',
         ]);
-        
-        Product::findOrFail($id)->update($validatedData);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        // Periksa apakah ada foto baru diunggah
+        if ($request->hasFile('image')) {
+            // Hapus foto lama dari storage
+            Storage::delete($product->image);
+
+            // Simpan foto baru di dalam storage
+            $validatedData['image'] = $request->file('image')->storeAs('public/product-image', $validatedData['product_name'] . '.' . $request->file('image')->getClientOriginalExtension());
+        }
+
+
+        $product->update($validatedData);
+
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -92,8 +119,48 @@ class ProductController extends Controller
     {
         //destroy
         $product = Product::find($id);
+        //delete image from storage
+        if ($product->image) {
+            Storage::delete($product->image);
+        }
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    public function addImage(Request $request, string $id)
+    {
+        $request->validate([
+            'image' => 'required|mimes:png,jpg,jpeg|max:5048'
+        ]);
+        try {
+            if ($request->file('image') !== null) {
+                $image = $request->file('image');
+                $image->storeAs('public/product', $image->hashName());
+
+                ProductImage::create([
+                    'user_id' => auth()->id(),
+                    'product_id' => $id,
+                    'url' => $image->hashName()
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Foto berhasil ditambahkan!!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Foto Gagal ditambahkan!!');
+        }
+    }
+
+    public function deleteImage(string $id)
+    {
+        try {
+            $image = ProductImage::findOrFail($id);
+            unlink("storage/product/" . $image->url);
+            $image->delete();
+
+            return redirect()->back()->with('success', 'Gambar berhasil dihapus!!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gambar gagal dihapus!!');
+        }
     }
 }

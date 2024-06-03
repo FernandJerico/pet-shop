@@ -41,7 +41,7 @@ class CategoryController extends Controller
 
         Category::create($validatedData);
 
-        return redirect()->route('categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
     }
 
@@ -77,7 +77,7 @@ class CategoryController extends Controller
 
         Category::whereId($id)->update($validatedData);
 
-        return redirect()->route('categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
     }
 
@@ -89,7 +89,7 @@ class CategoryController extends Controller
         //destroy
         Category::destroy($category->id);
 
-        return redirect()->route('categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'Category deleted successfully.');
     }
 }
