@@ -2,7 +2,7 @@
 
 @section('main-content')
     <div class="py-5">
-        <div class="container">
+        <div class="container py-5">
             <div class="row">
                 <div class="col d-flex justify-content-end mb-2">
                     <form action="{{ route('cart.delete') }}" method="POST">
