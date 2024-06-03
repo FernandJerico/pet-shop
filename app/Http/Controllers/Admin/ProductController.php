@@ -41,7 +41,7 @@ class ProductController extends Controller
         //store
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:sub_categories,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
             'product_name' => 'required',
             'description' => 'required',
             'status' => 'required|in:active,inactive',

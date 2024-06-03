@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('sub_category_id')->constrained('sub_categories')->onDelete('cascade');
+            $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->onDelete('cascade');
             $table->string('product_name');
             $table->text('description');
             $table->enum('status', ['active', 'inactive'])->default('active');
