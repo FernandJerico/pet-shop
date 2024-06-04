@@ -72,7 +72,7 @@
                         <div class="card h-100 product-item">
                             <!-- Product image-->
                             <img class="card-img-top w-100"
-                                src="{{ $product->images->first() ? asset('storage/product/' . $product->images->first()->url) : asset('assets/img/illustrations/man-with-laptop-light.png') }}"
+                                src="{{ $related_product->images->first() ? asset('storage/product/' . $related_product->images->first()->url) : asset('assets/img/illustrations/man-with-laptop-light.png') }}"
                                 alt="Product Image" />
                             <!-- Product details-->
                             <div class="card-body p-4">
@@ -86,7 +86,7 @@
                                                 {{ number_format($item->price, 0, ',', '.') }}</span>
                                         @endforeach
                                     @else
-                                        <span><b>OUT OF STOCK</b></span>
+                                        <span><small style="color: red;">Out of Stock</small></span>
                                     @endif
                                 </div>
                             </div>

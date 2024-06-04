@@ -23,13 +23,13 @@ class UserSeeder extends Seeder
             'password' => Hash::make('admin'),
         ]);
 
-        //make user
+        //make admin
         DB::table('users')->insert([
-            'first_name' => 'Fajar',
-            'last_name' => 'Gema',
-            'email' => 'user@gmail.com',
-            'roles' => 'user',
-            'password' => Hash::make('user'),
+            'first_name' => 'Valeria',
+            'last_name' => 'Cyrilla',
+            'email' => 'valeriacyrilla@gmail.com',
+            'roles' => 'admin',
+            'password' => Hash::make('valeria123'),
         ]);
     }
 }

@@ -28,8 +28,8 @@ Route::get('/', function (Request $request) {
 Route::get('/detail/{id}', function (Request $request, $id) {
     $categories = Category::where('status', 'active')->get();
     $product = Product::with('inventories')->find($id);
-    $categoryId = $product->category_id;
-    $relatedProducts = Product::with('inventories')->where('category_id', $categoryId)
+    $subcategoryId = $product->sub_category_id;
+    $relatedProducts = Product::with('inventories')->where('sub_category_id', $subcategoryId)
         ->where('id', '!=', $id)->inRandomOrder()->limit(4)->get();
 
     $search = $request->input('search', '');
